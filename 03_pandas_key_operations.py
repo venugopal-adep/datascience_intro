@@ -3,21 +3,45 @@ import pandas as pd
 import plotly.express as px
 import io
 
-st.set_page_config(layout="wide", page_title="Interactive Pandas Explorer")
+st.set_page_config(layout="wide", page_title="Pandas Key Operations")
 
 # Custom color palette
 colors = {
-    "primary": "#4A4E69",
-    "secondary": "#9A8C98",
-    "accent": "#C9ADA7",
-    "background": "#F2E9E4",
-    "text": "#22223B"
+    "primary": "#0066CC",
+    "secondary": "#FF6347", 
+    "accent": "#32CD32",
+    "background": "#F0F8FF",
+    "text": "#333333"
 }
 
-# Custom CSS (same as before)
-st.markdown("""
+# Custom CSS
+st.markdown(f"""
 <style>
-    ... (CSS styles remain the same)
+    .reportview-container .main .block-container{{
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 1200px;
+    }}
+    .stApp {{
+        background-color: {colors['background']};
+    }}
+    h1, h2, h3, h4, h5, h6 {{
+        color: {colors['primary']};
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }}
+    .stButton>button {{
+        background-color: {colors['accent']};
+        color: {colors['text']};
+        font-weight: bold;
+        border-radius: 5px;
+        border: none;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }}
+    .stButton>button:hover {{
+        background-color: {colors['secondary']};
+        color: white;
+    }}
 </style>
 """, unsafe_allow_html=True)
 

@@ -65,7 +65,6 @@ def main():
     tabs = st.tabs([
         "Matplotlib", 
         "Seaborn", 
-        "Comparison",
         "Quiz"
     ])
 
@@ -76,9 +75,6 @@ def main():
         seaborn_tab()
 
     with tabs[2]:
-        comparison_tab()
-
-    with tabs[3]:
         quiz_tab()
 
 def explain(text):
@@ -100,43 +96,134 @@ def matplotlib_tab():
     explain("Matplotlib is a versatile library that gives you fine-grained control over your visualizations.")
     
     # Interactive Matplotlib example
-    st.subheader("Interactive Matplotlib Example")
+    st.subheader("Matplotlib Examples")
     
-    plot_type = st.selectbox("Choose a plot type", ["Line Plot", "Bar Chart", "Scatter Plot", "Histogram"])
+    plot_type = st.selectbox("Choose a plot type", ["Line Plot", "Bar Chart", "Scatter Plot", "Histogram", "Pie Chart"])
     
-    x = np.linspace(0, 10, 100)
-    y = np.sin(x)
+    col1, col2 = st.columns(2)
     
-    fig, ax = plt.subplots(figsize=(10, 6))
-    
-    if plot_type == "Line Plot":
-        ax.plot(x, y)
-        ax.set_title("Sine Wave")
-    elif plot_type == "Bar Chart":
-        data = {'A': 5, 'B': 7, 'C': 3, 'D': 8}
-        ax.bar(data.keys(), data.values())
-        ax.set_title("Sample Bar Chart")
-    elif plot_type == "Scatter Plot":
-        ax.scatter(x, y)
-        ax.set_title("Sine Wave Scatter")
-    else:  # Histogram
-        ax.hist(np.random.normal(0, 1, 1000), bins=30)
-        ax.set_title("Normal Distribution Histogram")
-    
-    st.pyplot(fig)
-    
-    st.code(f"""
-    import matplotlib.pyplot as plt
-    import numpy as np
+    with col1:
+        if plot_type == "Line Plot":
+            code = """
+import matplotlib.pyplot as plt
+import numpy as np
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+plt.figure(figsize=(8, 6))
+plt.plot(x, y)
+plt.title("Sine Wave")
+plt.xlabel("x")
+plt.ylabel("sin(x)")
+plt.show()
+            """
+            st.code(code, language="python")
+        
+        elif plot_type == "Bar Chart":
+            code = """
+import matplotlib.pyplot as plt
+
+data = {'A': 5, 'B': 7, 'C': 3, 'D': 8}
+
+plt.figure(figsize=(8, 6))
+plt.bar(data.keys(), data.values())
+plt.title("Sample Bar Chart")
+plt.xlabel("Categories")
+plt.ylabel("Values")
+plt.show()
+            """
+            st.code(code, language="python")
+        
+        elif plot_type == "Scatter Plot":
+            code = """
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.random.rand(50)
+y = np.random.rand(50)
+
+plt.figure(figsize=(8, 6))
+plt.scatter(x, y)
+plt.title("Sample Scatter Plot")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.show()
+            """
+            st.code(code, language="python")
+        
+        elif plot_type == "Histogram":
+            code = """
+import matplotlib.pyplot as plt
+import numpy as np
+
+data = np.random.normal(0, 1, 1000)
+
+plt.figure(figsize=(8, 6))
+plt.hist(data, bins=30)
+plt.title("Normal Distribution Histogram")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.show()
+            """
+            st.code(code, language="python")
+        
+        else:  # Pie Chart
+            code = """
+import matplotlib.pyplot as plt
+
+sizes = [30, 20, 25, 15, 10]
+labels = ['A', 'B', 'C', 'D', 'E']
+
+plt.figure(figsize=(8, 6))
+plt.pie(sizes, labels=labels, autopct='%1.1f%%')
+plt.title("Sample Pie Chart")
+plt.axis('equal')
+plt.show()
+            """
+            st.code(code, language="python")
     
-    # Code for {plot_type.lower()}
-    {ax.get_lines() if plot_type == "Line Plot" else ax.containers[0] if plot_type in ["Bar Chart", "Histogram"] else ax.collections[0]}
-    
-    plt.title("{ax.get_title()}")
-    plt.show()
-    """, language="python")
+    with col2:
+        fig, ax = plt.subplots(figsize=(8, 6))
+        
+        if plot_type == "Line Plot":
+            x = np.linspace(0, 10, 100)
+            y = np.sin(x)
+            ax.plot(x, y)
+            ax.set_title("Sine Wave")
+            ax.set_xlabel("x")
+            ax.set_ylabel("sin(x)")
+        
+        elif plot_type == "Bar Chart":
+            data = {'A': 5, 'B': 7, 'C': 3, 'D': 8}
+            ax.bar(data.keys(), data.values())
+            ax.set_title("Sample Bar Chart")
+            ax.set_xlabel("Categories")
+            ax.set_ylabel("Values")
+        
+        elif plot_type == "Scatter Plot":
+            x = np.random.rand(50)
+            y = np.random.rand(50)
+            ax.scatter(x, y)
+            ax.set_title("Sample Scatter Plot")
+            ax.set_xlabel("X")
+            ax.set_ylabel("Y")
+        
+        elif plot_type == "Histogram":
+            data = np.random.normal(0, 1, 1000)
+            ax.hist(data, bins=30)
+            ax.set_title("Normal Distribution Histogram")
+            ax.set_xlabel("Value")
+            ax.set_ylabel("Frequency")
+        
+        else:  # Pie Chart
+            sizes = [30, 20, 25, 15, 10]
+            labels = ['A', 'B', 'C', 'D', 'E']
+            ax.pie(sizes, labels=labels, autopct='%1.1f%%')
+            ax.set_title("Sample Pie Chart")
+            ax.axis('equal')
+        
+        st.pyplot(fig)
 
 def seaborn_tab():
     st.header("Seaborn")
@@ -150,9 +237,11 @@ def seaborn_tab():
     explain("Seaborn is built on top of Matplotlib and provides a high-level interface for drawing attractive statistical graphics.")
     
     # Interactive Seaborn example
-    st.subheader("Interactive Seaborn Example")
+    st.subheader("Seaborn Examples")
     
     plot_type = st.selectbox("Choose a plot type", ["Distplot", "Boxplot", "Stripplot", "Pairplot"])
+    
+    col1, col2 = st.columns(2)
     
     # Generate sample data
     data = pd.DataFrame({
@@ -161,81 +250,93 @@ def seaborn_tab():
         'C': np.random.normal(-1, 1, 1000)
     })
     
-    if plot_type != "Pairplot":
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        if plot_type == "Distplot":
-            sns.histplot(data=data, x='A', kde=True, ax=ax)
-            ax.set_title("Distribution Plot")
-        elif plot_type == "Boxplot":
-            sns.boxplot(data=data, ax=ax)
-            ax.set_title("Box Plot")
-        elif plot_type == "Stripplot":
-            sns.stripplot(data=data, ax=ax)
-            ax.set_title("Strip Plot")
-        
-        st.pyplot(fig)
-    else:  # Pairplot
-        fig = sns.pairplot(data, height=3)
-        st.pyplot(fig)
-    
-    st.code(f"""
-    import seaborn as sns
-    import pandas as pd
-    import numpy as np
-
-    data = pd.DataFrame({{
-        'A': np.random.normal(0, 1, 1000),
-        'B': np.random.normal(2, 1, 1000),
-        'C': np.random.normal(-1, 1, 1000)
-    }})
-
-    # Code for {plot_type.lower()}
-    {'fig, ax = plt.subplots(figsize=(10, 6))' if plot_type != "Pairplot" else ''}
-    sns.{plot_type.lower()}(data=data{', x="A", kde=True' if plot_type == "Distplot" else ''}{', ax=ax' if plot_type != "Pairplot" else ''})
-    {'plt.title("' + ax.get_title() + '")' if plot_type != "Pairplot" else ''}
-    plt.show()
-    """, language="python")
-
-def comparison_tab():
-    st.header("Matplotlib vs Seaborn")
-    
-    col1, col2 = st.columns(2)
-    
     with col1:
-        st.subheader("Matplotlib")
-        st.write("- More control over plot elements")
-        st.write("- Steeper learning curve")
-        st.write("- Good for custom visualizations")
+        if plot_type == "Distplot":
+            code = """
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+data = pd.DataFrame({
+    'A': np.random.normal(0, 1, 1000)
+})
+
+plt.figure(figsize=(8, 6))
+sns.histplot(data=data, x='A', kde=True)
+plt.title("Distribution Plot")
+plt.show()
+            """
+            st.code(code, language="python")
+        
+        elif plot_type == "Boxplot":
+            code = """
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+data = pd.DataFrame({
+    'A': np.random.normal(0, 1, 1000),
+    'B': np.random.normal(2, 1, 1000),
+    'C': np.random.normal(-1, 1, 1000)
+})
+
+plt.figure(figsize=(8, 6))
+sns.boxplot(data=data)
+plt.title("Box Plot")
+plt.show()
+            """
+            st.code(code, language="python")
+        
+        elif plot_type == "Stripplot":
+            code = """
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+data = pd.DataFrame({
+    'A': np.random.normal(0, 1, 1000),
+    'B': np.random.normal(2, 1, 1000),
+    'C': np.random.normal(-1, 1, 1000)
+})
+
+plt.figure(figsize=(8, 6))
+sns.stripplot(data=data)
+plt.title("Strip Plot")
+plt.show()
+            """
+            st.code(code, language="python")
+        
+        else:  # Pairplot
+            code = """
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+data = pd.DataFrame({
+    'A': np.random.normal(0, 1, 1000),
+    'B': np.random.normal(2, 1, 1000),
+    'C': np.random.normal(-1, 1, 1000)
+})
+
+sns.pairplot(data)
+plt.show()
+            """
+            st.code(code, language="python")
     
     with col2:
-        st.subheader("Seaborn")
-        st.write("- Higher-level interface")
-        st.write("- Easier for statistical visualizations")
-        st.write("- Built-in themes and color palettes")
-    
-    explain("Both libraries have their strengths. Matplotlib offers more flexibility, while Seaborn provides convenient functions for common statistical plots.")
-    
-    # Comparison example
-    st.subheader("Comparison Example: Scatter Plot")
-    
-    data = pd.DataFrame({
-        'x': np.random.rand(100),
-        'y': np.random.rand(100),
-        'size': np.random.rand(100) * 100
-    })
-    
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-    
-    # Matplotlib
-    ax1.scatter(data['x'], data['y'], s=data['size'])
-    ax1.set_title("Matplotlib Scatter")
-    
-    # Seaborn
-    sns.scatterplot(data=data, x='x', y='y', size='size', ax=ax2)
-    ax2.set_title("Seaborn Scatter")
-    
-    st.pyplot(fig)
+        if plot_type != "Pairplot":
+            fig, ax = plt.subplots(figsize=(8, 6))
+            
+            if plot_type == "Distplot":
+                sns.histplot(data=data, x='A', kde=True, ax=ax)
+                ax.set_title("Distribution Plot")
+            elif plot_type == "Boxplot":
+                sns.boxplot(data=data, ax=ax)
+                ax.set_title("Box Plot")
+            elif plot_type == "Stripplot":
+                sns.stripplot(data=data, ax=ax)
+                ax.set_title("Strip Plot")
+            
+            st.pyplot(fig)
+        else:  # Pairplot
+            fig = sns.pairplot(data)
+            st.pyplot(fig)
 
 def quiz_tab():
     st.header("Visualization Libraries Quiz 📊")
@@ -248,7 +349,7 @@ def quiz_tab():
 
     questions = [
         {
-            "question": "Which library is known for providing high-quality graphics and a variety of plots?",
+            "question": "Which library is one of the most popular for data visualizations?",
             "options": ["NumPy", "Pandas", "Matplotlib", "Scikit-learn"],
             "correct": "Matplotlib",
             "explanation": "Matplotlib is one of the most popular libraries for data visualizations, providing high-quality graphics and a variety of plots."

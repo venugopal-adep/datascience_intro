@@ -139,8 +139,11 @@ def interactive_example_tab():
     
     st.write("Let's create a scatter plot with some random data. You can adjust the number of points and the range of values.")
     
-    num_points = st.slider("Number of data points", min_value=10, max_value=1000, value=100, step=10)
-    value_range = st.slider("Range of values", min_value=0, max_value=100, value=(0, 50))
+    col1, col2 = st.columns([1, 3])  # Create two columns with a 1:3 width ratio
+    
+    with col1:
+        num_points = st.slider("Number of data points", min_value=10, max_value=1000, value=100, step=10)
+        value_range = st.slider("Range of values", min_value=0, max_value=100, value=(0, 50))
     
     data = pd.DataFrame({
         'x': np.random.rand(num_points) * (value_range[1] - value_range[0]) + value_range[0],
@@ -148,11 +151,11 @@ def interactive_example_tab():
         'category': np.random.choice(['A', 'B', 'C'], num_points)
     })
     
-    fig = px.scatter(data, x='x', y='y', color='category', title='Interactive Scatter Plot')
-    st.plotly_chart(fig)
+    with col2:
+        fig = px.scatter(data, x='x', y='y', color='category', title='Interactive Scatter Plot')
+        st.plotly_chart(fig, use_container_width=True)
     
     explain("This interactive example demonstrates how data visualization can help you explore and understand patterns in your data. Try adjusting the sliders to see how the visualization changes!")
-
 def quiz_tab():
     st.header("Data Visualization Quiz 📊")
     

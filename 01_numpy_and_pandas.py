@@ -26,7 +26,8 @@ if 'game_state' not in st.session_state:
         'numpy_concepts': numpy_concepts.copy(),
         'pandas_concepts': pandas_concepts.copy(),
         'score': 0,
-        'total_concepts': len(numpy_concepts) + len(pandas_concepts)
+        'total_concepts': len(numpy_concepts) + len(pandas_concepts),
+        'current_concept': None
     }
 
 # Function to check if the concept belongs to NumPy or Pandas
@@ -50,30 +51,31 @@ with col2:
 
 # Display a random concept
 if st.session_state.game_state['numpy_concepts'] or st.session_state.game_state['pandas_concepts']:
-    all_concepts = st.session_state.game_state['numpy_concepts'] + st.session_state.game_state['pandas_concepts']
-    current_concept = random.choice(all_concepts)
+    if not st.session_state.game_state['current_concept']:
+        all_concepts = st.session_state.game_state['numpy_concepts'] + st.session_state.game_state['pandas_concepts']
+        st.session_state.game_state['current_concept'] = random.choice(all_concepts)
     
     st.write("Drag and drop this concept to the correct library:")
-    st.info(current_concept)
+    st.info(st.session_state.game_state['current_concept'])
     
     numpy_clicked = numpy_drop.button("Drop to NumPy")
     pandas_clicked = pandas_drop.button("Drop to Pandas")
     
     if numpy_clicked or pandas_clicked:
-        if (numpy_clicked and check_concept(current_concept, "NumPy")) or (pandas_clicked and check_concept(current_concept, "Pandas")):
+        if (numpy_clicked and check_concept(st.session_state.game_state['current_concept'], "NumPy")) or (pandas_clicked and check_concept(st.session_state.game_state['current_concept'], "Pandas")):
             st.success("Correct! Well done!")
             st.session_state.game_state['score'] += 1
         else:
             st.error("Oops! That's not the right library for this concept.")
         
         # Remove the concept from the game state
-        if current_concept in st.session_state.game_state['numpy_concepts']:
-            st.session_state.game_state['numpy_concepts'].remove(current_concept)
+        if st.session_state.game_state['current_concept'] in st.session_state.game_state['numpy_concepts']:
+            st.session_state.game_state['numpy_concepts'].remove(st.session_state.game_state['current_concept'])
         else:
-            st.session_state.game_state['pandas_concepts'].remove(current_concept)
+            st.session_state.game_state['pandas_concepts'].remove(st.session_state.game_state['current_concept'])
         
-        # Force a rerun to update the game state
-        st.experimental_rerun()
+        st.session_state.game_state['current_concept'] = None
+        st.rerun()
 else:
     st.success(f"Congratulations! You've completed the game. Your score: {st.session_state.game_state['score']}/{st.session_state.game_state['total_concepts']}")
     if st.button("Play Again"):
@@ -81,9 +83,10 @@ else:
             'numpy_concepts': numpy_concepts.copy(),
             'pandas_concepts': pandas_concepts.copy(),
             'score': 0,
-            'total_concepts': len(numpy_concepts) + len(pandas_concepts)
+            'total_concepts': len(numpy_concepts) + len(pandas_concepts),
+            'current_concept': None
         }
-        st.experimental_rerun()
+        st.rerun()
 
 # Display current score
 st.sidebar.write(f"Current Score: {st.session_state.game_state['score']}/{st.session_state.game_state['total_concepts']}")

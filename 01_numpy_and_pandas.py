@@ -6,7 +6,6 @@ import io
 
 st.set_page_config(layout="wide", page_title="NumPy & Pandas Explorer")
 
-# Custom color palette
 colors = {
     "primary": "#0066CC",
     "secondary": "#FF6347", 
@@ -15,7 +14,6 @@ colors = {
     "text": "#333333"
 }
 
-# Custom CSS
 st.markdown(f"""
 <style>
     .reportview-container .main .block-container{{
@@ -30,19 +28,6 @@ st.markdown(f"""
         color: {colors['primary']};
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }}
-    .stButton>button {{
-        background-color: {colors['accent']};
-        color: {colors['text']};
-        font-weight: bold;
-        border-radius: 5px;
-        border: none;
-        padding: 0.5rem 1rem;
-        transition: all 0.3s ease;
-    }}
-    .stButton>button:hover {{
-        background-color: {colors['secondary']};
-        color: white;
-    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -53,55 +38,39 @@ def explain(text):
     </div>
     """, unsafe_allow_html=True)
 
-def main():
-    st.title("NumPy & Pandas Explorer")
-    st.write('**Developed by : Venugopal Adep**')
-    
-    tabs = st.tabs(["Learn", "NumPy Demo", "Pandas Demo", "Quiz"])
-    
-    with tabs[0]:
-        learn_tab()
-    
-    with tabs[1]:
-        numpy_demo_tab()
-    
-    with tabs[2]:
-        pandas_demo_tab()
-    
-    with tabs[3]:
-        quiz_tab()
-
 def learn_tab():
     st.header("Key Libraries for Data Manipulation - NumPy & Pandas")
     
-    st.subheader("NumPy")
-    st.markdown("""
-    - Numerical Python
-    - Fundamental package for scientific computing
-    - A powerful N-dimensional array object - ndarray
-    - Useful in linear algebra, vector calculus, and random number capabilities, etc.
-    """)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("NumPy")
+        st.markdown("""
+        - Numerical Python
+        - Fundamental package for scientific computing
+        - A powerful N-dimensional array object - ndarray
+        - Useful in linear algebra, vector calculus, and random number capabilities, etc.
+        """)
     
-    st.subheader("Pandas")
-    st.markdown("""
-    - Extremely useful for data manipulation and exploratory analysis
-    - Offers two major data structures - Series & DataFrame
-    - A DataFrame is made up of several Series - Each column of a DataFrame is a Series
-    - In a DataFrame, each column can have its own data type unlike NumPy array which creates all entries with the same data type
-    """)
+    with col2:
+        st.subheader("Pandas")
+        st.markdown("""
+        - Extremely useful for data manipulation and exploratory analysis
+        - Offers two major data structures - Series & DataFrame
+        - A DataFrame is made up of several Series - Each column of a DataFrame is a Series
+        - In a DataFrame, each column can have its own data type unlike NumPy array which creates all entries with the same data type
+        """)
     
     explain("Both NumPy and Pandas are essential libraries for data manipulation in Python, with NumPy focusing on numerical operations and Pandas excelling in data analysis and manipulation.")
 
 def numpy_demo_tab():
     st.header("NumPy Demo")
     
-    st.subheader("Create a NumPy Array")
-    dimensions = st.slider("Select dimensions for the array", 1, 3, 2)
-    size = st.number_input("Enter size for each dimension", 1, 10, 3)
+    col1, col2 = st.columns(2)
+    with col1:
+        dimensions = st.slider("Select dimensions for the array", 1, 3, 2)
+        size = st.number_input("Enter size for each dimension", 1, 10, 3)
     
-    arr = None  # Initialize arr outside the button click scope
-
-    if st.button("Generate NumPy Array"):
+    with col2:
         if dimensions == 1:
             arr = np.random.rand(size)
         elif dimensions == 2:
@@ -115,66 +84,61 @@ def numpy_demo_tab():
         st.write(f"Array Shape: {arr.shape}")
         st.write(f"Array Dimensions: {arr.ndim}")
         st.write(f"Array Size: {arr.size}")
-        
-        if dimensions == 2:
-            fig = px.imshow(arr, color_continuous_scale='viridis')
-            st.plotly_chart(fig)
+    
+    if dimensions == 2:
+        fig = px.imshow(arr, color_continuous_scale='viridis')
+        st.plotly_chart(fig)
     
     st.subheader("NumPy Operations")
     operation = st.selectbox("Select an operation", ["Sum", "Mean", "Standard Deviation", "Matrix Multiplication"])
     
-    if arr is not None:  # Only show the "Perform Operation" button if arr is defined
-        if operation == "Matrix Multiplication" and dimensions < 2:
-            st.warning("Matrix multiplication requires at least 2 dimensions.")
-        elif st.button("Perform Operation"):
-            if operation == "Sum":
-                result = np.sum(arr)
-            elif operation == "Mean":
-                result = np.mean(arr)
-            elif operation == "Standard Deviation":
-                result = np.std(arr)
-            elif operation == "Matrix Multiplication" and dimensions >= 2:
-                result = np.matmul(arr, arr)
-            
-            st.write(f"Result of {operation}:")
-            st.write(result)
+    if operation == "Matrix Multiplication" and dimensions < 2:
+        st.warning("Matrix multiplication requires at least 2 dimensions.")
     else:
-        st.info("Please generate a NumPy array first before performing operations.")
+        if operation == "Sum":
+            result = np.sum(arr)
+        elif operation == "Mean":
+            result = np.mean(arr)
+        elif operation == "Standard Deviation":
+            result = np.std(arr)
+        elif operation == "Matrix Multiplication" and dimensions >= 2:
+            result = np.matmul(arr, arr)
+        
+        st.write(f"Result of {operation}:")
+        st.write(result)
 
 def pandas_demo_tab():
     st.header("Pandas Demo")
     
-    st.subheader("Create a Pandas DataFrame")
     num_rows = st.slider("Number of rows", 5, 20, 10)
     
-    if st.button("Generate DataFrame"):
-        df = pd.DataFrame({
-            'A': np.random.randn(num_rows),
-            'B': np.random.choice(['X', 'Y', 'Z'], num_rows),
-            'C': np.random.randint(1, 100, num_rows),
-            'D': pd.date_range(start='2023-01-01', periods=num_rows)
-        })
-        
-        st.write("Generated Pandas DataFrame:")
-        st.write(df)
-        
-        st.write("DataFrame Info:")
-        buffer = io.StringIO()
-        df.info(buf=buffer)
-        s = buffer.getvalue()
-        st.text(s)
-        
-        st.subheader("DataFrame Operations")
-        operation = st.selectbox("Select an operation", ["Describe", "Group By", "Filter", "Sort"])
-        
-        if operation == "Describe":
-            st.write(df.describe())
-        elif operation == "Group By":
-            st.write(df.groupby('B').mean())
-        elif operation == "Filter":
-            st.write(df[df['C'] > 50])
-        elif operation == "Sort":
-            st.write(df.sort_values('A', ascending=False))
+    df = pd.DataFrame({
+        'A': np.random.randn(num_rows),
+        'B': np.random.choice(['X', 'Y', 'Z'], num_rows),
+        'C': np.random.randint(1, 100, num_rows),
+        'D': pd.date_range(start='2023-01-01', periods=num_rows)
+    })
+    
+    st.write("Generated Pandas DataFrame:")
+    st.write(df)
+    
+    st.write("DataFrame Info:")
+    buffer = io.StringIO()
+    df.info(buf=buffer)
+    s = buffer.getvalue()
+    st.text(s)
+    
+    st.subheader("DataFrame Operations")
+    operation = st.selectbox("Select an operation", ["Describe", "Group By", "Filter", "Sort"])
+    
+    if operation == "Describe":
+        st.write(df.describe())
+    elif operation == "Group By":
+        st.write(df.groupby('B').mean())
+    elif operation == "Filter":
+        st.write(df[df['C'] > 50])
+    elif operation == "Sort":
+        st.write(df.sort_values('A', ascending=False))
 
 def quiz_tab():
     st.header("Quiz: NumPy & Pandas")
@@ -205,23 +169,39 @@ def quiz_tab():
         st.subheader(f"Question {i+1}")
         st.write(q["question"])
         answer = st.radio(f"Select your answer for question {i+1}:", q["options"], key=f"q{i}")
-        if st.button(f"Submit Answer {i+1}"):
-            if q["options"].index(answer) == q["correct"]:
-                st.success("Correct!")
-                score += 1
-            else:
-                st.error(f"Incorrect. The correct answer is: {q['options'][q['correct']]}")
-            st.info(f"Explanation: {q['explanation']}")
-    
-    if st.button("Show Results"):
-        st.write(f"Your score: {score}/{len(questions)}")
-        if score == len(questions):
-            st.balloons()
-            st.success("Perfect score! You have a great understanding of NumPy and Pandas!")
-        elif score >= len(questions) / 2:
-            st.success("Good job! You have a solid grasp of NumPy and Pandas concepts.")
+        if q["options"].index(answer) == q["correct"]:
+            st.success("Correct!")
+            score += 1
         else:
-            st.info("Keep learning! Review the content about NumPy and Pandas to improve your understanding.")
+            st.error(f"Incorrect. The correct answer is: {q['options'][q['correct']]}")
+        st.info(f"Explanation: {q['explanation']}")
+    
+    st.write(f"Your score: {score}/{len(questions)}")
+    if score == len(questions):
+        st.balloons()
+        st.success("Perfect score! You have a great understanding of NumPy and Pandas!")
+    elif score >= len(questions) / 2:
+        st.success("Good job! You have a solid grasp of NumPy and Pandas concepts.")
+    else:
+        st.info("Keep learning! Review the content about NumPy and Pandas to improve your understanding.")
+
+def main():
+    st.title("NumPy & Pandas Explorer")
+    st.write('**Developed by : Venugopal Adep**')
+    
+    tabs = st.tabs(["Learn", "NumPy Demo", "Pandas Demo", "Quiz"])
+    
+    with tabs[0]:
+        learn_tab()
+    
+    with tabs[1]:
+        numpy_demo_tab()
+    
+    with tabs[2]:
+        pandas_demo_tab()
+    
+    with tabs[3]:
+        quiz_tab()
 
 if __name__ == "__main__":
     main()

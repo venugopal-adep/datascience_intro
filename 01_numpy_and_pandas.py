@@ -37,6 +37,22 @@ st.markdown("""
         border-radius: 10px;
         margin-bottom: 20px;
     }
+    .feedback-box {
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+    .feedback-correct {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .feedback-incorrect {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -65,7 +81,8 @@ if 'game_state' not in st.session_state:
         'score': 0,
         'total_concepts': sum(len(concept_list) for concept_list in concepts.values()),
         'current_concept': None,
-        'feedback': None
+        'feedback': None,
+        'show_next': False
     }
 
 # Main game logic
@@ -73,6 +90,7 @@ if st.session_state.game_state['concepts']:
     if not st.session_state.game_state['current_concept']:
         st.session_state.game_state['current_concept'] = random.choice(st.session_state.game_state['concepts'])
         st.session_state.game_state['feedback'] = None
+        st.session_state.game_state['show_next'] = False
 
     # Display live score
     st.markdown(f"""
@@ -90,34 +108,41 @@ if st.session_state.game_state['concepts']:
     """, unsafe_allow_html=True)
 
     # Buttons for selection
-    col1, col2 = st.columns(2)
-    with col1:
-        numpy_selected = st.button("NumPy", key="numpy_button", use_container_width=True)
-    with col2:
-        pandas_selected = st.button("Pandas", key="pandas_button", use_container_width=True)
+    if not st.session_state.game_state['show_next']:
+        col1, col2 = st.columns(2)
+        with col1:
+            numpy_selected = st.button("NumPy", key="numpy_button", use_container_width=True)
+        with col2:
+            pandas_selected = st.button("Pandas", key="pandas_button", use_container_width=True)
 
-    # Check answer and provide feedback
-    if numpy_selected or pandas_selected:
-        selected_library = "NumPy" if numpy_selected else "Pandas"
-        correct_library = st.session_state.game_state['current_concept'][1]
-        
-        if selected_library == correct_library:
-            st.session_state.game_state['score'] += 1
-            st.session_state.game_state['feedback'] = f"✅ Correct! This concept belongs to {correct_library}."
-        else:
-            st.session_state.game_state['feedback'] = f"❌ Oops! This concept actually belongs to {correct_library}."
-        
-        st.session_state.game_state['concepts'].remove(st.session_state.game_state['current_concept'])
-        st.session_state.game_state['current_concept'] = None
-        st.rerun()
+        # Check answer and provide feedback
+        if numpy_selected or pandas_selected:
+            selected_library = "NumPy" if numpy_selected else "Pandas"
+            correct_library = st.session_state.game_state['current_concept'][1]
+            
+            if selected_library == correct_library:
+                st.session_state.game_state['score'] += 1
+                st.session_state.game_state['feedback'] = f"✅ Correct! This concept belongs to {correct_library}."
+            else:
+                st.session_state.game_state['feedback'] = f"❌ Incorrect. This concept actually belongs to {correct_library}."
+            
+            st.session_state.game_state['show_next'] = True
+            st.rerun()
 
-    # Display feedback
+    # Display feedback and next button
     if st.session_state.game_state['feedback']:
         st.markdown(f"""
-        <div style="padding: 10px; border-radius: 5px; text-align: center; font-size: 18px; font-weight: bold; background-color: {'#d4edda' if '✅' in st.session_state.game_state['feedback'] else '#f8d7da'};">
+        <div class="feedback-box {'feedback-correct' if '✅' in st.session_state.game_state['feedback'] else 'feedback-incorrect'}">
             {st.session_state.game_state['feedback']}
         </div>
         """, unsafe_allow_html=True)
+
+        if st.button("Next Question"):
+            st.session_state.game_state['concepts'].remove(st.session_state.game_state['current_concept'])
+            st.session_state.game_state['current_concept'] = None
+            st.session_state.game_state['feedback'] = None
+            st.session_state.game_state['show_next'] = False
+            st.rerun()
 
 else:
     final_score = st.session_state.game_state['score']
@@ -141,7 +166,8 @@ else:
             'score': 0,
             'total_concepts': sum(len(concept_list) for concept_list in concepts.values()),
             'current_concept': None,
-            'feedback': None
+            'feedback': None,
+            'show_next': False
         }
         st.rerun()
 

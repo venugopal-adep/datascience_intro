@@ -23,8 +23,7 @@ pandas_concepts = [
 # Session state to keep track of the game state
 if 'game_state' not in st.session_state:
     st.session_state.game_state = {
-        'numpy_concepts': numpy_concepts.copy(),
-        'pandas_concepts': pandas_concepts.copy(),
+        'concepts': numpy_concepts + pandas_concepts,
         'score': 0,
         'total_concepts': len(numpy_concepts) + len(pandas_concepts),
         'current_concept': None
@@ -39,49 +38,36 @@ def check_concept(concept, library):
     return False
 
 # Main game logic
-col1, col2 = st.columns(2)
-
-with col1:
-    st.header("NumPy")
-    numpy_drop = st.empty()
-
-with col2:
-    st.header("Pandas")
-    pandas_drop = st.empty()
-
-# Display a random concept
-if st.session_state.game_state['numpy_concepts'] or st.session_state.game_state['pandas_concepts']:
+if st.session_state.game_state['concepts']:
     if not st.session_state.game_state['current_concept']:
-        all_concepts = st.session_state.game_state['numpy_concepts'] + st.session_state.game_state['pandas_concepts']
-        st.session_state.game_state['current_concept'] = random.choice(all_concepts)
+        st.session_state.game_state['current_concept'] = random.choice(st.session_state.game_state['concepts'])
     
-    st.write("Drag and drop this concept to the correct library:")
+    st.write("Select the correct library for this concept:")
     st.info(st.session_state.game_state['current_concept'])
     
-    numpy_clicked = numpy_drop.button("Drop to NumPy")
-    pandas_clicked = pandas_drop.button("Drop to Pandas")
+    col1, col2 = st.columns(2)
+    with col1:
+        numpy_selected = st.button("NumPy", key="numpy_button", use_container_width=True)
+    with col2:
+        pandas_selected = st.button("Pandas", key="pandas_button", use_container_width=True)
     
-    if numpy_clicked or pandas_clicked:
-        if (numpy_clicked and check_concept(st.session_state.game_state['current_concept'], "NumPy")) or (pandas_clicked and check_concept(st.session_state.game_state['current_concept'], "Pandas")):
+    if numpy_selected or pandas_selected:
+        selected_library = "NumPy" if numpy_selected else "Pandas"
+        if check_concept(st.session_state.game_state['current_concept'], selected_library):
             st.success("Correct! Well done!")
             st.session_state.game_state['score'] += 1
         else:
-            st.error("Oops! That's not the right library for this concept.")
+            st.error(f"Oops! This concept belongs to {'NumPy' if selected_library == 'Pandas' else 'Pandas'}.")
         
         # Remove the concept from the game state
-        if st.session_state.game_state['current_concept'] in st.session_state.game_state['numpy_concepts']:
-            st.session_state.game_state['numpy_concepts'].remove(st.session_state.game_state['current_concept'])
-        else:
-            st.session_state.game_state['pandas_concepts'].remove(st.session_state.game_state['current_concept'])
-        
+        st.session_state.game_state['concepts'].remove(st.session_state.game_state['current_concept'])
         st.session_state.game_state['current_concept'] = None
         st.rerun()
 else:
     st.success(f"Congratulations! You've completed the game. Your score: {st.session_state.game_state['score']}/{st.session_state.game_state['total_concepts']}")
     if st.button("Play Again"):
         st.session_state.game_state = {
-            'numpy_concepts': numpy_concepts.copy(),
-            'pandas_concepts': pandas_concepts.copy(),
+            'concepts': numpy_concepts + pandas_concepts,
             'score': 0,
             'total_concepts': len(numpy_concepts) + len(pandas_concepts),
             'current_concept': None
@@ -102,8 +88,7 @@ st.markdown("""
         color: #0066CC;
     }
     .stButton>button {
-        width: 100%;
-        height: 100px;
+        height: 60px;
         font-size: 20px;
         margin-top: 20px;
     }

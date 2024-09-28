@@ -95,12 +95,11 @@ def matplotlib_tab():
     
     explain("Matplotlib is a versatile library that gives you fine-grained control over your visualizations.")
     
-    # Interactive Matplotlib example
     st.subheader("Matplotlib Examples")
     
     plot_type = st.selectbox("Choose a plot type", ["Line Plot", "Bar Chart", "Scatter Plot", "Histogram", "Pie Chart"])
     
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 1])
     
     with col1:
         if plot_type == "Line Plot":
@@ -111,7 +110,7 @@ import numpy as np
 x = np.linspace(0, 10, 100)
 y = np.sin(x)
 
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(5, 4))
 plt.plot(x, y)
 plt.title("Sine Wave")
 plt.xlabel("x")
@@ -126,7 +125,7 @@ import matplotlib.pyplot as plt
 
 data = {'A': 5, 'B': 7, 'C': 3, 'D': 8}
 
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(5, 4))
 plt.bar(data.keys(), data.values())
 plt.title("Sample Bar Chart")
 plt.xlabel("Categories")
@@ -143,7 +142,7 @@ import numpy as np
 x = np.random.rand(50)
 y = np.random.rand(50)
 
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(5, 4))
 plt.scatter(x, y)
 plt.title("Sample Scatter Plot")
 plt.xlabel("X")
@@ -159,7 +158,7 @@ import numpy as np
 
 data = np.random.normal(0, 1, 1000)
 
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(5, 4))
 plt.hist(data, bins=30)
 plt.title("Normal Distribution Histogram")
 plt.xlabel("Value")
@@ -175,7 +174,7 @@ import matplotlib.pyplot as plt
 sizes = [30, 20, 25, 15, 10]
 labels = ['A', 'B', 'C', 'D', 'E']
 
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(5, 4))
 plt.pie(sizes, labels=labels, autopct='%1.1f%%')
 plt.title("Sample Pie Chart")
 plt.axis('equal')
@@ -184,7 +183,7 @@ plt.show()
             st.code(code, language="python")
     
     with col2:
-        fig, ax = plt.subplots(figsize=(8, 6))
+        fig, ax = plt.subplots(figsize=(5, 4))
         
         if plot_type == "Line Plot":
             x = np.linspace(0, 10, 100)
@@ -223,7 +222,7 @@ plt.show()
             ax.set_title("Sample Pie Chart")
             ax.axis('equal')
         
-        st.pyplot(fig)
+        st.pyplot(fig, use_container_width=True)
 
 def seaborn_tab():
     st.header("Seaborn")
@@ -236,12 +235,11 @@ def seaborn_tab():
     
     explain("Seaborn is built on top of Matplotlib and provides a high-level interface for drawing attractive statistical graphics.")
     
-    # Interactive Seaborn example
     st.subheader("Seaborn Examples")
     
     plot_type = st.selectbox("Choose a plot type", ["Distplot", "Boxplot", "Stripplot", "Pairplot"])
     
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 1])
     
     # Generate sample data
     data = pd.DataFrame({
@@ -260,7 +258,7 @@ data = pd.DataFrame({
     'A': np.random.normal(0, 1, 1000)
 })
 
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(5, 4))
 sns.histplot(data=data, x='A', kde=True)
 plt.title("Distribution Plot")
 plt.show()
@@ -278,7 +276,7 @@ data = pd.DataFrame({
     'C': np.random.normal(-1, 1, 1000)
 })
 
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(5, 4))
 sns.boxplot(data=data)
 plt.title("Box Plot")
 plt.show()
@@ -296,7 +294,7 @@ data = pd.DataFrame({
     'C': np.random.normal(-1, 1, 1000)
 })
 
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(5, 4))
 sns.stripplot(data=data)
 plt.title("Strip Plot")
 plt.show()
@@ -314,14 +312,14 @@ data = pd.DataFrame({
     'C': np.random.normal(-1, 1, 1000)
 })
 
-sns.pairplot(data)
+sns.pairplot(data, height=2)
 plt.show()
             """
             st.code(code, language="python")
     
     with col2:
         if plot_type != "Pairplot":
-            fig, ax = plt.subplots(figsize=(8, 6))
+            fig, ax = plt.subplots(figsize=(5, 4))
             
             if plot_type == "Distplot":
                 sns.histplot(data=data, x='A', kde=True, ax=ax)
@@ -333,10 +331,10 @@ plt.show()
                 sns.stripplot(data=data, ax=ax)
                 ax.set_title("Strip Plot")
             
-            st.pyplot(fig)
+            st.pyplot(fig, use_container_width=True)
         else:  # Pairplot
-            fig = sns.pairplot(data)
-            st.pyplot(fig)
+            fig = sns.pairplot(data, height=2)
+            st.pyplot(fig, use_container_width=True)
 
 def quiz_tab():
     st.header("Visualization Libraries Quiz 📊")

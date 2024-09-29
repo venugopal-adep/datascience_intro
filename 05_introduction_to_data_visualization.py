@@ -57,6 +57,7 @@ def main():
     """, unsafe_allow_html=True)
 
     tabs = st.tabs([
+        "Introduction",
         "What is Data Visualization?", 
         "Why is it Important?", 
         "Interactive Example",
@@ -64,15 +65,18 @@ def main():
     ])
 
     with tabs[0]:
-        what_is_data_viz_tab()
+        introduction_tab()
 
     with tabs[1]:
-        why_data_viz_important_tab()
+        what_is_data_viz_tab()
 
     with tabs[2]:
-        interactive_example_tab()
+        why_data_viz_important_tab()
 
     with tabs[3]:
+        interactive_example_tab()
+
+    with tabs[4]:
         quiz_tab()
 
 def explain(text):
@@ -81,6 +85,25 @@ def explain(text):
         <p style='color: {colors['text']}; margin: 0;'>{text}</p>
     </div>
     """, unsafe_allow_html=True)
+
+def introduction_tab():
+    st.header("Introduction to Visualization")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("What is Data Visualization?")
+        st.markdown("""
+        - Visual representation of data
+        - Helps to observe and communicate patterns & trends with naked eye
+        """)
+
+    with col2:
+        st.subheader("Why Data Visualization is important?")
+        st.markdown("""
+        - Data visualization helps to communicate information in a manner that is universal, fast, and effective
+        - Communicating insights to non-technical decision makers is one of the most critical phases in a data science project
+        """)
 
 def what_is_data_viz_tab():
     st.header("What is Data Visualization?")
@@ -156,6 +179,7 @@ def interactive_example_tab():
         st.plotly_chart(fig, use_container_width=True)
     
     explain("This interactive example demonstrates how data visualization can help you explore and understand patterns in your data. Try adjusting the sliders to see how the visualization changes!")
+
 def quiz_tab():
     st.header("Data Visualization Quiz 📊")
     

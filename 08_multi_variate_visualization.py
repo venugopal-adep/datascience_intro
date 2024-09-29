@@ -48,6 +48,9 @@ st.markdown(f"""
         justify-content: center;
         align-items: center;
     }}
+    .stDataFrame {{
+        font-size: 14px;
+    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -64,19 +67,48 @@ def main():
     """, unsafe_allow_html=True)
 
     tabs = st.tabs([
+        "Overview",
         "Pair Plot",
         "Heatmap",
         "Quiz"
     ])
 
     with tabs[0]:
-        pair_plot()
+        overview()
 
     with tabs[1]:
-        heatmap()
+        pair_plot()
 
     with tabs[2]:
+        heatmap()
+
+    with tabs[3]:
         quiz()
+
+def overview():
+    st.header("Multivariate Visualization Overview")
+    
+    data = {
+        "Type": ["Multivariate", "Multivariate"],
+        "Variables": ["Continuous (more than two)", "Continuous (more than two)"],
+        "Purpose of analysis": [
+            "How to visualize relationship across multiple combination of variables?",
+            "How to visualize the spread of values in the data with color-encoding?"
+        ],
+        "Type of chart": ["Pair Plot", "Heatmap"],
+        "Example": [
+            "Relation between three variables - horsepower, weight, and acceleration",
+            "Correlation matrix for three variables - horsepower, weight, and acceleration"
+        ]
+    }
+    
+    df = pd.DataFrame(data)
+    st.table(df)
+    
+    st.markdown("""
+    **Note:** Pair plot and heatmap can also be used with only two variables but are generally preferred and more
+    useful for visualizing more than two variables.
+    """)
 
 def explain(text):
     st.markdown(f"""
@@ -90,21 +122,12 @@ def show_code(code):
 
 def pair_plot():
     st.header("Pair Plot")
-    explain("Use this to visualize relationships across multiple combinations of variables. It's particularly useful for exploring correlations between multiple continuous variables.")
+    col1, col2 = st.columns([1, 1])
     
-    # Generate sample data
-    np.random.seed(0)
-    n = 100
-    data = pd.DataFrame({
-        'horsepower': np.random.normal(150, 30, n),
-        'weight': np.random.normal(3000, 500, n),
-        'acceleration': np.random.normal(15, 3, n)
-    })
-    
-    fig = sns.pairplot(data, height=3)
-    st.pyplot(fig)
-    
-    show_code("""
+    with col1:
+        explain("Use this to visualize relationships across multiple combinations of variables. It's particularly useful for exploring correlations between multiple continuous variables.")
+        
+        show_code("""
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -119,35 +142,36 @@ data = pd.DataFrame({
 })
 
 # Create pair plot
-fig = sns.pairplot(data, height=3)
+fig = sns.pairplot(data, height=2)
+plt.tight_layout()
 plt.show()
-    """)
+        """)
+    
+    with col2:
+        # Generate sample data
+        np.random.seed(0)
+        n = 100
+        data = pd.DataFrame({
+            'horsepower': np.random.normal(150, 30, n),
+            'weight': np.random.normal(3000, 500, n),
+            'acceleration': np.random.normal(15, 3, n)
+        })
+        
+        fig = sns.pairplot(data, height=2)
+        plt.tight_layout()
+        st.pyplot(fig)
     
     st.markdown("**Example:**")
     st.write("- Relation between three variables - horsepower, weight, and acceleration")
 
 def heatmap():
     st.header("Heatmap")
-    explain("Use this to visualize the spread of values in the data with color-encoding. It's particularly useful for showing correlation matrices between multiple variables.")
+    col1, col2 = st.columns([1, 1])
     
-    # Generate sample data
-    np.random.seed(0)
-    n = 100
-    data = pd.DataFrame({
-        'horsepower': np.random.normal(150, 30, n),
-        'weight': np.random.normal(3000, 500, n),
-        'acceleration': np.random.normal(15, 3, n)
-    })
-    
-    # Compute correlation matrix
-    corr = data.corr()
-    
-    fig, ax = plt.subplots(figsize=(10, 8))
-    sns.heatmap(corr, annot=True, cmap='coolwarm', ax=ax)
-    ax.set_title("Correlation Heatmap")
-    st.pyplot(fig)
-    
-    show_code("""
+    with col1:
+        explain("Use this to visualize the spread of values in the data with color-encoding. It's particularly useful for showing correlation matrices between multiple variables.")
+        
+        show_code("""
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -165,19 +189,34 @@ data = pd.DataFrame({
 corr = data.corr()
 
 # Create heatmap
-fig, ax = plt.subplots(figsize=(10, 8))
+fig, ax = plt.subplots(figsize=(8, 6))
 sns.heatmap(corr, annot=True, cmap='coolwarm', ax=ax)
 ax.set_title("Correlation Heatmap")
+plt.tight_layout()
 plt.show()
-    """)
+        """)
+    
+    with col2:
+        # Generate sample data
+        np.random.seed(0)
+        n = 100
+        data = pd.DataFrame({
+            'horsepower': np.random.normal(150, 30, n),
+            'weight': np.random.normal(3000, 500, n),
+            'acceleration': np.random.normal(15, 3, n)
+        })
+        
+        # Compute correlation matrix
+        corr = data.corr()
+        
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.heatmap(corr, annot=True, cmap='coolwarm', ax=ax)
+        ax.set_title("Correlation Heatmap")
+        plt.tight_layout()
+        st.pyplot(fig)
     
     st.markdown("**Example:**")
     st.write("- Correlation matrix for three variables - horsepower, weight, and acceleration")
-
-    st.markdown("""
-    **Note:** Pair plots and heatmaps can also be used with only two variables but are generally preferred and more
-    useful for visualizing more than two variables.
-    """)
 
 def quiz():
     st.header("Multivariate Visualization Quiz 📊")

@@ -120,6 +120,68 @@ def interactive_demo_tab():
     fig.show()
     """)
 
+def quiz_tab():
+    st.header("Quiz: Stacked Bar Plots")
+    
+    questions = [
+        {
+            "question": "What is the main purpose of a stacked bar plot?",
+            "options": [
+                "To show trends over time",
+                "To compare total amounts and composition within categories",
+                "To display the distribution of a continuous variable",
+                "To show the correlation between two variables"
+            ],
+            "correct": 1,
+            "explanation": "Stacked bar plots are primarily used to compare total amounts across categories and show the composition within each category."
+        },
+        {
+            "question": "In the example stacked bar plot, which fitness level has the highest percentage of smokers?",
+            "options": [
+                "Very Good",
+                "Good",
+                "Poor",
+                "Very Poor"
+            ],
+            "correct": 3,
+            "explanation": "The plot shows that the 'Very Poor' fitness level has the highest percentage of smokers, with about 80% of individuals in this category being smokers."
+        },
+        {
+            "question": "What advantage does a stacked bar plot have over a simple bar plot?",
+            "options": [
+                "It can show more categories",
+                "It displays part-to-whole relationships within each category",
+                "It's better for comparing exact values",
+                "It always looks more visually appealing"
+            ],
+            "correct": 1,
+            "explanation": "A key advantage of stacked bar plots is their ability to display part-to-whole relationships within each category, showing both the total and the breakdown simultaneously."
+        }
+    ]
+    
+    score = 0
+    for i, q in enumerate(questions):
+        st.subheader(f"Question {i+1}")
+        st.write(q["question"])
+        answer = st.radio(f"Select your answer for question {i+1}:", q["options"], key=f"q{i}")
+        if st.button(f"Submit Answer {i+1}"):
+            if q["options"].index(answer) == q["correct"]:
+                st.success("Correct!")
+                score += 1
+            else:
+                st.error(f"Incorrect. The correct answer is: {q['options'][q['correct']]}")
+            st.info(f"Explanation: {q['explanation']}")
+    
+    if st.button("Show Results"):
+        st.write(f"Your score: {score}/{len(questions)}")
+        if score == len(questions):
+            st.balloons()
+            st.success("Perfect score! You have a great understanding of stacked bar plots!")
+        elif score >= len(questions) / 2:
+            st.success("Good job! You have a solid grasp of stacked bar plot concepts.")
+        else:
+            st.info("Keep learning! Review the content about stacked bar plots to improve your understanding.")
+
 def main():
     st.title("Stacked Bar Plot Exploration")
     st.write('**Developed by: Venugopal Adep**')
@@ -139,8 +201,7 @@ def main():
         interactive_demo_tab()
     
     with tabs[2]:
-        st.header("Quiz: Stacked Bar Plots")
-        # Quiz tab content...
+        quiz_tab()
 
 if __name__ == "__main__":
     main()

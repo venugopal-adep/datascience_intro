@@ -89,6 +89,9 @@ def learn_tab():
 def interactive_demo_tab():
     st.header("Interactive Demo: Detecting and Handling Outliers")
 
+    # Explanation for the tab
+    explain("This demo allows you to explore different methods of outlier detection and handling. Choose a method to visualize outliers and apply a technique to handle them in real-time.")
+
     data = generate_sample_data()
 
     col1, col2 = st.columns([1, 2])
@@ -96,6 +99,7 @@ def interactive_demo_tab():
     with col1:
         st.subheader("1. Sample Data")
         st.write(data.head())
+        explain("The data contains two columns ('x' and 'y'). Some of these data points are considered outliers, which we'll identify and handle using different methods.")
 
         st.subheader("2. Outlier Detection")
         method = st.radio("Select a method to detect outliers", ["Boxplot", "Scatter plot"])
@@ -104,22 +108,32 @@ def interactive_demo_tab():
 
         st.subheader("3. Handling Outliers")
         handling_method = st.radio("Select a method to handle outliers", ["Remove", "Cap"])
+        explain(f"You can either 'Remove' the outliers or 'Cap' them. Removing outliers eliminates them, while capping replaces them with a boundary value.")
 
     with col2:
         st.subheader("Visualization")
 
         if method == "Boxplot":
             fig = px.box(data, y=column)
-            fig.update_layout(title=f"Boxplot for {column}")
+            fig.update_layout(title=f"Boxplot for {column}", annotations=[
+                dict(x=0.5, y=max(data[column]), text="Outliers are points outside the whiskers", showarrow=False, font=dict(color="red"))
+            ])
         else:
             fig = px.scatter(data, x='x', y='y')
-            fig.update_layout(title="Scatter plot")
+            fig.update_layout(title="Scatter plot", annotations=[
+                dict(x=22, y=90, text="Outliers", showarrow=True, arrowhead=2, ax=-40, ay=-40, font=dict(color="red"))
+            ])
 
         st.plotly_chart(fig, use_container_width=True)
 
+        # Handle outliers based on selected method
         data_clean = handle_outliers(data, handling_method)
         fig_clean = px.scatter(data_clean, x='x', y='y', title="Data after handling outliers")
+        fig_clean.update_layout(annotations=[
+            dict(x=0.5, y=max(data_clean['y']), text=f"Data after {handling_method} handling", showarrow=False, font=dict(color="green"))
+        ])
         st.plotly_chart(fig_clean, use_container_width=True)
+        explain(f"The plot above shows the data after applying the '{handling_method}' method to handle outliers.")
 
 def quiz_tab():
     st.header("Quiz: Outliers")

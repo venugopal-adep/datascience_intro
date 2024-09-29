@@ -63,18 +63,22 @@ def main():
     """, unsafe_allow_html=True)
 
     tabs = st.tabs([
+        "Overview",
         "Matplotlib", 
         "Seaborn", 
         "Quiz"
     ])
 
     with tabs[0]:
-        matplotlib_tab()
+        overview_tab()
 
     with tabs[1]:
-        seaborn_tab()
+        matplotlib_tab()
 
     with tabs[2]:
+        seaborn_tab()
+
+    with tabs[3]:
         quiz_tab()
 
 def explain(text):
@@ -84,14 +88,29 @@ def explain(text):
     </div>
     """, unsafe_allow_html=True)
 
+def overview_tab():
+    st.header("Overview of Visualization Libraries")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Matplotlib")
+        st.markdown("""
+        - One of the most popular libraries for data visualizations
+        - Provides high-quality graphics and a variety of plots such as histograms, bar charts, pie charts, etc.
+        - Some important functions: plot(), hist(), bar(), pie(), scatter(), text(), legend(), etc.
+        """)
+
+    with col2:
+        st.subheader("Seaborn")
+        st.markdown("""
+        - Complementary to Matplotlib and specifically targets statistical data visualizations
+        - A saying: "Matplotlib tries to make easy things easier and hard things possible, Seaborn tries to make a well-defined set of hard things easy too."
+        - Some important functions: displot(), boxplot(), stripplot(), pairplot()
+        """)
+
 def matplotlib_tab():
     st.header("Matplotlib")
-    
-    st.markdown("""
-    - One of the most popular libraries for data visualizations
-    - Provides high-quality graphics and a variety of plots such as histograms, bar charts, pie charts, etc.
-    - Some important functions: plot(), hist(), bar(), pie(), scatter(), text(), legend(), etc.
-    """)
     
     explain("Matplotlib is a versatile library that gives you fine-grained control over your visualizations.")
     
@@ -226,12 +245,6 @@ plt.show()
 
 def seaborn_tab():
     st.header("Seaborn")
-    
-    st.markdown("""
-    - Complementary to Matplotlib and specifically targets statistical data visualizations
-    - A saying: "Matplotlib tries to make easy things easier and hard things possible, Seaborn tries to make a well-defined set of hard things easy too."
-    - Some important functions: displot(), boxplot(), stripplot(), pairplot()
-    """)
     
     explain("Seaborn is built on top of Matplotlib and provides a high-level interface for drawing attractive statistical graphics.")
     

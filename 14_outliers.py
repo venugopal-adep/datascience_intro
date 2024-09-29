@@ -75,13 +75,24 @@ def main():
 
 def learn_tab():
     st.header("What are outliers?")
-    st.write("Outliers are the observations which are very different from the other observations. In order to analyze the data, sometimes we have to work with outliers.")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.write("Outliers are the observations which are very different from the other observations. In order to analyze the data, sometimes we have to work with outliers.")
+    
+    with col2:
+        explain("Detecting and handling outliers is crucial for accurate data analysis and model building.")
     
     st.header("How to detect outliers?")
-    st.write("1. Boxplot: We can visualize the outliers by using box plot.")
-    st.write("2. Scatter plot: We can check outliers using scatter plot by identifying the data point that lies far from other observations.")
     
-    explain("Detecting and handling outliers is crucial for accurate data analysis and model building.")
+    col3, col4 = st.columns(2)
+    
+    with col3:
+        st.write("1. Boxplot: We can visualize the outliers by using box plot.")
+    
+    with col4:
+        st.write("2. Scatter plot: We can check outliers using scatter plot by identifying the data point that lies far from other observations.")
 
 def generate_sample_data(n=100):
     np.random.seed(42)
@@ -99,50 +110,73 @@ def interactive_demo_tab():
     
     data = generate_sample_data()
     
-    st.subheader("Sample Data")
-    st.write(data.head())
+    col1, col2 = st.columns([1, 2])
     
-    st.subheader("Outlier Detection Methods")
-    method = st.radio("Select a method to detect outliers", ["Boxplot", "Scatter plot"])
-    
-    if method == "Boxplot":
-        column = st.selectbox("Select a column for boxplot", data.columns)
-        fig = px.box(data, y=column)
-        fig.update_layout(title=f"Boxplot for {column}")
-    else:
-        fig = px.scatter(data, x='x', y='y')
-        fig.update_layout(title="Scatter plot")
-    
-    st.plotly_chart(fig)
-    
-    st.subheader("Handling Outliers")
-    handling_method = st.radio("Select a method to handle outliers", ["Remove", "Cap"])
-    
-    if handling_method == "Remove":
+    with col1:
+        st.subheader("Sample Data")
+        st.write(data.head())
+        
+        st.subheader("Outlier Detection Methods")
+        method = st.radio("Select a method to detect outliers", ["Boxplot", "Scatter plot"])
+        
+        if method == "Boxplot":
+            column = st.selectbox("Select a column for boxplot", data.columns)
+        
+        st.subheader("Handling Outliers")
+        handling_method = st.radio("Select a method to handle outliers", ["Remove", "Cap"])
+        
+        if st.button("Apply Method"):
+            if handling_method == "Remove":
+                Q1 = data.quantile(0.25)
+                Q3 = data.quantile(0.75)
+                IQR = Q3 - Q1
+                data_clean = data[~((data < (Q1 - 1.5 * IQR)) | (data > (Q3 + 1.5 * IQR))).any(axis=1)]
+            else:
+                Q1 = data.quantile(0.25)
+                Q3 = data.quantile(0.75)
+                IQR = Q3 - Q1
+                data_clean = data.clip(lower=Q1 - 1.5 * IQR, upper=Q3 + 1.5 * IQR, axis=1)
+            
+            st.write("Original data shape:", data.shape)
+            st.write("Cleaned data shape:", data_clean.shape)
+        
+        st.subheader("Code")
+        st.code(f"""
+        # Handling outliers
         Q1 = data.quantile(0.25)
         Q3 = data.quantile(0.75)
         IQR = Q3 - Q1
-        data_clean = data[~((data < (Q1 - 1.5 * IQR)) | (data > (Q3 + 1.5 * IQR))).any(axis=1)]
-    else:
-        Q1 = data.quantile(0.25)
-        Q3 = data.quantile(0.75)
-        IQR = Q3 - Q1
-        data_clean = data.clip(lower=Q1 - 1.5 * IQR, upper=Q3 + 1.5 * IQR, axis=1)
+        
+        if handling_method == "Remove":
+            data_clean = data[~((data < (Q1 - 1.5 * IQR)) | (data > (Q3 + 1.5 * IQR))).any(axis=1)]
+        else:
+            data_clean = data.clip(lower=Q1 - 1.5 * IQR, upper=Q3 + 1.5 * IQR, axis=1)
+        """)
     
-    st.write("Original data shape:", data.shape)
-    st.write("Cleaned data shape:", data_clean.shape)
-    
-    st.code(f"""
-    # Handling outliers
-    Q1 = data.quantile(0.25)
-    Q3 = data.quantile(0.75)
-    IQR = Q3 - Q1
-    
-    if handling_method == "Remove":
-        data_clean = data[~((data < (Q1 - 1.5 * IQR)) | (data > (Q3 + 1.5 * IQR))).any(axis=1)]
-    else:
-        data_clean = data.clip(lower=Q1 - 1.5 * IQR, upper=Q3 + 1.5 * IQR, axis=1)
-    """)
+    with col2:
+        if method == "Boxplot":
+            fig = px.box(data, y=column)
+            fig.update_layout(title=f"Boxplot for {column}")
+        else:
+            fig = px.scatter(data, x='x', y='y')
+            fig.update_layout(title="Scatter plot")
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        if st.button("Show Handled Data"):
+            if handling_method == "Remove":
+                Q1 = data.quantile(0.25)
+                Q3 = data.quantile(0.75)
+                IQR = Q3 - Q1
+                data_clean = data[~((data < (Q1 - 1.5 * IQR)) | (data > (Q3 + 1.5 * IQR))).any(axis=1)]
+            else:
+                Q1 = data.quantile(0.25)
+                Q3 = data.quantile(0.75)
+                IQR = Q3 - Q1
+                data_clean = data.clip(lower=Q1 - 1.5 * IQR, upper=Q3 + 1.5 * IQR, axis=1)
+            
+            fig_clean = px.scatter(data_clean, x='x', y='y', title="Data after handling outliers")
+            st.plotly_chart(fig_clean, use_container_width=True)
 
 def quiz_tab():
     st.header("Quiz: Outliers")

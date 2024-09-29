@@ -53,8 +53,10 @@ def handle_outliers(data, method):
     Q3 = data.quantile(0.75)
     IQR = Q3 - Q1
     if method == "Remove":
+        # Remove outliers using the IQR method
         data_clean = data[~((data < (Q1 - 1.5 * IQR)) | (data > (Q3 + 1.5 * IQR))).any(axis=1)]
     else:
+        # Cap the outliers to the lower and upper bounds
         data_clean = data.clip(lower=Q1 - 1.5 * IQR, upper=Q3 + 1.5 * IQR, axis=1)
     return data_clean
 
@@ -108,7 +110,24 @@ def interactive_demo_tab():
 
         st.subheader("3. Handling Outliers")
         handling_method = st.radio("Select a method to handle outliers", ["Remove", "Cap"])
-        explain(f"You can either 'Remove' the outliers or 'Cap' them. Removing outliers eliminates them, while capping replaces them with a boundary value.")
+        
+        # Explanation for handling methods
+        if handling_method == "Remove":
+            explain("""
+            **Remove Outliers:** Outliers are removed based on the Interquartile Range (IQR) method.
+            - **Formula:** An outlier is any value outside the range [Q1 - 1.5 * IQR, Q3 + 1.5 * IQR].
+            - **Q1:** 25th percentile of the data.
+            - **Q3:** 75th percentile of the data.
+            - **IQR:** Interquartile range, calculated as Q3 - Q1.
+            """)
+        else:
+            explain("""
+            **Cap Outliers:** Outliers are capped to the boundaries using the IQR method.
+            - **Formula:** Values below Q1 - 1.5 * IQR are set to Q1 - 1.5 * IQR. Values above Q3 + 1.5 * IQR are set to Q3 + 1.5 * IQR.
+            - **Q1:** 25th percentile of the data.
+            - **Q3:** 75th percentile of the data.
+            - **IQR:** Interquartile range, calculated as Q3 - Q1.
+            """)
 
     with col2:
         st.subheader("Visualization")

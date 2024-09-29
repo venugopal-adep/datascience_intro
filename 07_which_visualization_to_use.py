@@ -63,6 +63,7 @@ def main():
     """, unsafe_allow_html=True)
 
     tabs = st.tabs([
+        "Summary Table",
         "Univariate Continuous",
         "Univariate Categorical",
         "Bivariate Continuous",
@@ -72,16 +73,18 @@ def main():
     ])
 
     with tabs[0]:
-        univariate_continuous()
+        summary_table()
     with tabs[1]:
-        univariate_categorical()
+        univariate_continuous()
     with tabs[2]:
-        bivariate_continuous()
+        univariate_categorical()
     with tabs[3]:
-        bivariate_time_series()
+        bivariate_continuous()
     with tabs[4]:
-        bivariate_continuous_categorical()
+        bivariate_time_series()
     with tabs[5]:
+        bivariate_continuous_categorical()
+    with tabs[6]:
         bivariate_categorical_categorical()
 
 def explain(text):
@@ -93,6 +96,35 @@ def explain(text):
 
 def show_code(code):
     st.code(code, language='python')
+
+def summary_table():
+    st.header("Summary of Visualization Types")
+    
+    data = {
+        "Type": ["Univariate", "Univariate", "Bivariate", "Bivariate", "Bivariate", "Bivariate"],
+        "X Variable": ["Continuous", "Categorical", "Continuous", "Time Related (months, hours, etc.)", "Continuous", "Categorical"],
+        "Y Variable": ["-", "-", "Continuous", "Continuous", "Categorical", "Categorical"],
+        "Purpose of analysis": [
+            "How the values of the X variable are distributed?",
+            "What is the count of observations in each category of X variable?",
+            "How Y is correlated with X?",
+            "How Y changes over time?",
+            "How range of X varies for various category levels?",
+            "What is the number or % of records of X which falls under each category of Y?"
+        ],
+        "Type of chart": ["Histogram, Distribution plot", "Count Plot", "Scatter plot", "Line Plot", "Box plot, Swarm Plot", "Stacked Bar plot"],
+        "Example": [
+            "Distribution of cholesterol ranges\nDistribution of horsepower of cars",
+            "What is the count of employees for each type of degree in an organization?",
+            "How tip varies with the total bill?",
+            "How sales varies on different days?",
+            "How tip varies at lunch and dinner?\nHow tips varies with day of the week?",
+            "What is the percentage of smokers and non-smokers across fitness levels?"
+        ]
+    }
+    
+    df = pd.DataFrame(data)
+    st.table(df)
 
 def univariate_continuous():
     st.header("Univariate Continuous Visualization")

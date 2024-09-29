@@ -76,49 +76,31 @@ def interactive_demo_tab():
     
     with right_col:
         st.subheader("Stacked Bar Plot: Smoking Habits by Fitness Level")
+        
         if orientation == "Vertical":
             fig = px.bar(data, x="Fitness", y=["Smoker", "Non-smoker"], 
                          title="Percentage of Smokers and Non-smokers by Fitness Level",
                          labels={"value": "Percentage", "variable": "Smoking Status"},
                          color_discrete_map={"Smoker": "#1E90FF", "Non-smoker": "#4B0082"})
-        else:
+            
+            if percentage_display:
+                fig.update_traces(texttemplate='%{y:.0%}', textposition='inside')
+        
+        else:  # Horizontal orientation
             fig = px.bar(data, y="Fitness", x=["Smoker", "Non-smoker"], 
                          title="Percentage of Smokers and Non-smokers by Fitness Level",
                          labels={"value": "Percentage", "variable": "Smoking Status"},
                          color_discrete_map={"Smoker": "#1E90FF", "Non-smoker": "#4B0082"},
                          orientation='h')
-        
-        if percentage_display:
-            fig.update_traces(texttemplate='%{y:.0%}', textposition='inside')
+            
+            if percentage_display:
+                fig.update_traces(texttemplate='%{x:.0%}', textposition='inside')
         
         fig.update_layout(yaxis_title="Percentage" if orientation == "Vertical" else "Fitness Level",
                           xaxis_title="Fitness Level" if orientation == "Vertical" else "Percentage")
         
         st.plotly_chart(fig, use_container_width=True)
-    
-    # Full-width code block at the bottom
-    st.subheader("Code Used for the Plot")
-    st.code("""
-    import plotly.express as px
-    
-    # Create a stacked bar plot
-    fig = px.bar(data, x="Fitness", y=["Smoker", "Non-smoker"], 
-                 title="Percentage of Smokers and Non-smokers by Fitness Level",
-                 labels={"value": "Percentage", "variable": "Smoking Status"},
-                 color_discrete_map={"Smoker": "#1E90FF", "Non-smoker": "#4B0082"})
-    
-    # Optionally, change orientation to horizontal
-    # fig = px.bar(data, y="Fitness", x=["Smoker", "Non-smoker"], 
-    #              title="Percentage of Smokers and Non-smokers by Fitness Level",
-    #              labels={"value": "Percentage", "variable": "Smoking Status"},
-    #              color_discrete_map={"Smoker": "#1E90FF", "Non-smoker": "#4B0082"},
-    #              orientation='h')
-    
-    # Optionally, display percentages
-    # fig.update_traces(texttemplate='%{y:.0%}', textposition='inside')
-    
-    fig.show()
-    """)
+
 
 def quiz_tab():
     st.header("Quiz: Stacked Bar Plots")

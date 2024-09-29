@@ -16,7 +16,7 @@ colors = {
     "text": "#0D47A1"
 }
 
-# Custom CSS (keeping the original styling)
+# Custom CSS
 st.markdown(f"""
 <style>
     .reportview-container .main .block-container{{
@@ -51,6 +51,32 @@ st.markdown(f"""
         border-radius: 5px;
         border: 1px solid {colors['secondary']};
     }}
+    .styled-table {{
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }}
+    .styled-table thead tr {{
+        background-color: {colors['primary']};
+        color: #ffffff;
+        text-align: left;
+    }}
+    .styled-table th,
+    .styled-table td {{
+        padding: 12px 15px;
+    }}
+    .styled-table tbody tr {{
+        border-bottom: 1px solid #dddddd;
+    }}
+    .styled-table tbody tr:nth-of-type(even) {{
+        background-color: #f3f3f3;
+    }}
+    .styled-table tbody tr:last-of-type {{
+        border-bottom: 2px solid {colors['primary']};
+    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -66,26 +92,30 @@ def main():
     """, unsafe_allow_html=True)
 
     tabs = st.tabs([
+        "NumPy Overview",
         "Array Creation", "Array Reshaping", "Array Concatenation", 
         "Evenly Spaced Elements", "Matrix Operations", "NumPy Quiz"
     ])
 
     with tabs[0]:
-        array_creation_tab()
+        numpy_overview_tab()
 
     with tabs[1]:
-        array_reshaping_tab()
+        array_creation_tab()
 
     with tabs[2]:
-        array_concatenation_tab()
+        array_reshaping_tab()
 
     with tabs[3]:
-        evenly_spaced_elements_tab()
+        array_concatenation_tab()
 
     with tabs[4]:
-        matrix_operations_tab()
+        evenly_spaced_elements_tab()
 
     with tabs[5]:
+        matrix_operations_tab()
+
+    with tabs[6]:
         quiz_tab()
 
 def show_code(code):
@@ -97,6 +127,35 @@ def explain(text):
         <p style='color: {colors['text']}; margin: 0;'>{text}</p>
     </div>
     """, unsafe_allow_html=True)
+
+def numpy_overview_tab():
+    st.header("NumPy Overview")
+    
+    st.markdown("""
+    NumPy provides many useful operations for data manipulation. Some of the most commonly used
+    operations and functions of NumPy are:
+    """)
+
+    data = {
+        "Operation": [
+            "Declare a NumPy array or convert a list into a NumPy array",
+            "Reshape an n-dimensional array without changing the data inside the array",
+            "Concatenate two or more arrays along a specified axis",
+            "Create evenly spaced elements in an interval, particularly useful while working with loops",
+            "Working with matrices and perform different operations on them"
+        ],
+        "Numpy Function": [
+            "array()",
+            "reshape()",
+            "concatenate()",
+            "arange(), linspace()",
+            "dot(), transpose(), eye()"
+        ]
+    }
+
+    df = pd.DataFrame(data)
+
+    st.markdown(df.to_html(index=False, classes='styled-table'), unsafe_allow_html=True)
 
 def array_creation_tab():
     st.header("Array Creation with np.array()")

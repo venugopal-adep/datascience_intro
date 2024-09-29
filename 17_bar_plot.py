@@ -42,11 +42,6 @@ st.markdown(f"""
         background-color: {colors['secondary']};
         color: white;
     }}
-    .plot-container {{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -91,59 +86,59 @@ def generate_sample_data():
 def interactive_demo_tab():
     st.header("Interactive Bar Plot Demo")
     
+    # Create two columns: left for controls and explanation, right for plots
+    left_col, right_col = st.columns([1, 2])
+    
     data = generate_sample_data()
     
-    st.subheader("Sample Data")
-    st.write(data)
-    
-    st.subheader("Bar Plot: Birthday of Students by Month")
-    fig = px.bar(data, x="Month", y="Number of Students", 
-                 title="Birthday of Students by Month",
-                 labels={"Month": "Month", "Number of Students": "Number of Students"})
-    st.plotly_chart(fig)
-    
-    explain("This plot shows the distribution of student birthdays across different months. We can easily compare the number of students born in each month.")
-    
-    st.subheader("Customize the Plot")
-    orientation = st.radio("Bar Orientation", ["Vertical", "Horizontal"])
-    color_bars = st.checkbox("Color Bars by Value")
-    
-    if orientation == "Vertical":
-        fig = px.bar(data, x="Month", y="Number of Students",
+    with left_col:
+        st.subheader("Sample Data")
+        st.write(data)
+        
+        st.subheader("Customize the Plot")
+        orientation = st.radio("Bar Orientation", ["Vertical", "Horizontal"])
+        color_bars = st.checkbox("Color Bars by Value")
+        
+        explain("This plot shows the distribution of student birthdays across different months. We can easily compare the number of students born in each month.")
+        
+        st.code("""
+        import plotly.express as px
+        
+        # Create a bar plot
+        fig = px.bar(data, x="Month", y="Number of Students", 
                      title="Birthday of Students by Month",
-                     labels={"Month": "Month", "Number of Students": "Number of Students"},
-                     color="Number of Students" if color_bars else None)
-    else:
-        fig = px.bar(data, y="Month", x="Number of Students",
-                     title="Birthday of Students by Month",
-                     labels={"Month": "Month", "Number of Students": "Number of Students"},
-                     color="Number of Students" if color_bars else None,
-                     orientation='h')
+                     labels={"Month": "Month", "Number of Students": "Number of Students"})
+        
+        # Optionally, change orientation to horizontal
+        # fig = px.bar(data, y="Month", x="Number of Students",
+        #              title="Birthday of Students by Month",
+        #              labels={"Month": "Month", "Number of Students": "Number of Students"},
+        #              orientation='h')
+        
+        # Optionally, color bars by value
+        # fig = px.bar(data, x="Month", y="Number of Students",
+        #              title="Birthday of Students by Month",
+        #              labels={"Month": "Month", "Number of Students": "Number of Students"},
+        #              color="Number of Students")
+        
+        fig.show()
+        """)
     
-    st.plotly_chart(fig)
-    
-    st.code("""
-    import plotly.express as px
-    
-    # Create a bar plot
-    fig = px.bar(data, x="Month", y="Number of Students", 
-                 title="Birthday of Students by Month",
-                 labels={"Month": "Month", "Number of Students": "Number of Students"})
-    
-    # Optionally, change orientation to horizontal
-    # fig = px.bar(data, y="Month", x="Number of Students",
-    #              title="Birthday of Students by Month",
-    #              labels={"Month": "Month", "Number of Students": "Number of Students"},
-    #              orientation='h')
-    
-    # Optionally, color bars by value
-    # fig = px.bar(data, x="Month", y="Number of Students",
-    #              title="Birthday of Students by Month",
-    #              labels={"Month": "Month", "Number of Students": "Number of Students"},
-    #              color="Number of Students")
-    
-    fig.show()
-    """)
+    with right_col:
+        st.subheader("Bar Plot: Birthday of Students by Month")
+        if orientation == "Vertical":
+            fig = px.bar(data, x="Month", y="Number of Students",
+                         title="Birthday of Students by Month",
+                         labels={"Month": "Month", "Number of Students": "Number of Students"},
+                         color="Number of Students" if color_bars else None)
+        else:
+            fig = px.bar(data, y="Month", x="Number of Students",
+                         title="Birthday of Students by Month",
+                         labels={"Month": "Month", "Number of Students": "Number of Students"},
+                         color="Number of Students" if color_bars else None,
+                         orientation='h')
+        
+        st.plotly_chart(fig, use_container_width=True)
 
 def quiz_tab():
     st.header("Quiz: Bar Plots")

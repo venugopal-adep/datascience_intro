@@ -220,7 +220,7 @@ def why_preprocess_tab():
 
         outlier_threshold = st.slider("Select outlier threshold:", 
                                       min_value=int(data['Value'].min()), 
-                                      max_value=int(1500)), 
+                                      max_value=int(1500), 
                                       value=500)
         
         data_cleaned = data[data['Value'] < outlier_threshold]

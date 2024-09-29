@@ -58,26 +58,30 @@ def main():
     """, unsafe_allow_html=True)
 
     tabs = st.tabs([
+        "Pandas Overview 📚",
         "Data Loading 📊", "Data Info 🔍", "Data Description 📈", 
         "Data Merging 🔗", "Data Grouping 👥", "Pandas Pop Quiz 🧠"
     ])
 
     with tabs[0]:
-        data_loading_tab()
+        pandas_overview_tab()
 
     with tabs[1]:
-        data_info_tab()
+        data_loading_tab()
 
     with tabs[2]:
-        data_description_tab()
+        data_info_tab()
 
     with tabs[3]:
-        data_merging_tab()
+        data_description_tab()
 
     with tabs[4]:
-        data_grouping_tab()
+        data_merging_tab()
 
     with tabs[5]:
+        data_grouping_tab()
+
+    with tabs[6]:
         quiz_tab()
 
 def show_code(code):
@@ -89,6 +93,36 @@ def explain(text):
         <p style='color: {colors['text']}; margin: 0;'>{text}</p>
     </div>
     """, unsafe_allow_html=True)
+
+def pandas_overview_tab():
+    st.header("Pandas Overview 📚")
+    
+    st.markdown(f"""
+    <p style='font-size: 1.2em; color: {colors['text']}; background-color: white; padding: 15px; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);'>
+    Pandas is one of the most famous data manipulation tools which is built on top of NumPy. 
+    Some of the commonly used operations and functions of Pandas are:
+    </p>
+    """, unsafe_allow_html=True)
+
+    data = {
+        'Operation': [
+            'Load or import the data from different sources/formats',
+            'Information about the data - dimension, column dtypes, non-null values and memory usage',
+            'View of basic statistical details of numeric data - quartiles, min, max, mean, std',
+            'Merge two data frames with different types of join - inner join, left join, right join, and full outer join',
+            'Explore data frames by different groups, and apply summary functions on each group'
+        ],
+        'Pandas Function': [
+            'read_csv(), read_excel(), read_html(), read_json()',
+            'info()',
+            'describe()',
+            'merge()',
+            'groupby()'
+        ]
+    }
+
+    df = pd.DataFrame(data)
+    st.table(df)
 
 def data_loading_tab():
     st.header("Data Loading 📊")

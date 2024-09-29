@@ -92,55 +92,55 @@ def generate_sample_data(n=200):
 def interactive_demo_tab():
     st.header("Interactive Scatter Plot Demo")
     
+    # Create two columns: left for controls and explanation, right for plots
+    left_col, right_col = st.columns([1, 2])
+    
     data = generate_sample_data()
     
-    st.subheader("Sample Data")
-    st.write(data.head())
-    
-    st.subheader("Scatter Plot: Tip vs Total Bill")
-    fig = px.scatter(data, x="tip", y="total_bill", 
-                     title="Relationship between Tip and Total Bill",
-                     labels={"tip": "Tip", "total_bill": "Total Bill"})
-    st.plotly_chart(fig)
-    
-    explain("This plot shows the relationship between the tip and the total bill. We can observe that as the total bill increases, the tip also tends to increase.")
-    
-    st.subheader("Customize the Plot")
-    color_by = st.checkbox("Color by Tip Amount")
-    add_trendline = st.checkbox("Add Trendline")
-    
-    if color_by:
-        fig = px.scatter(data, x="tip", y="total_bill", color="tip",
-                         title="Relationship between Tip and Total Bill (Colored by Tip)",
-                         labels={"tip": "Tip", "total_bill": "Total Bill"})
-    else:
-        fig = px.scatter(data, x="tip", y="total_bill",
+    with left_col:
+        st.subheader("Sample Data")
+        st.write(data.head())
+        
+        st.subheader("Customize the Plot")
+        color_by = st.checkbox("Color by Tip Amount")
+        add_trendline = st.checkbox("Add Trendline")
+        
+        explain("This plot shows the relationship between the tip and the total bill. We can observe that as the total bill increases, the tip also tends to increase.")
+        
+        st.code("""
+        import plotly.express as px
+        
+        # Create a scatter plot
+        fig = px.scatter(data, x="tip", y="total_bill", 
                          title="Relationship between Tip and Total Bill",
                          labels={"tip": "Tip", "total_bill": "Total Bill"})
+        
+        # Optionally, color by tip amount
+        # fig = px.scatter(data, x="tip", y="total_bill", color="tip",
+        #                  title="Relationship between Tip and Total Bill (Colored by Tip)",
+        #                  labels={"tip": "Tip", "total_bill": "Total Bill"})
+        
+        # Optionally, add a trendline
+        # fig.add_traces(px.scatter(data, x="tip", y="total_bill", trendline="ols").data[1])
+        
+        fig.show()
+        """)
     
-    if add_trendline:
-        fig.add_traces(px.scatter(data, x="tip", y="total_bill", trendline="ols").data[1])
-    
-    st.plotly_chart(fig)
-    
-    st.code("""
-    import plotly.express as px
-    
-    # Create a scatter plot
-    fig = px.scatter(data, x="tip", y="total_bill", 
-                     title="Relationship between Tip and Total Bill",
-                     labels={"tip": "Tip", "total_bill": "Total Bill"})
-    
-    # Optionally, color by tip amount
-    # fig = px.scatter(data, x="tip", y="total_bill", color="tip",
-    #                  title="Relationship between Tip and Total Bill (Colored by Tip)",
-    #                  labels={"tip": "Tip", "total_bill": "Total Bill"})
-    
-    # Optionally, add a trendline
-    # fig.add_traces(px.scatter(data, x="tip", y="total_bill", trendline="ols").data[1])
-    
-    fig.show()
-    """)
+    with right_col:
+        st.subheader("Scatter Plot: Tip vs Total Bill")
+        fig = px.scatter(data, x="tip", y="total_bill", 
+                         title="Relationship between Tip and Total Bill",
+                         labels={"tip": "Tip", "total_bill": "Total Bill"})
+        
+        if color_by:
+            fig = px.scatter(data, x="tip", y="total_bill", color="tip",
+                             title="Relationship between Tip and Total Bill (Colored by Tip)",
+                             labels={"tip": "Tip", "total_bill": "Total Bill"})
+        
+        if add_trendline:
+            fig.add_traces(px.scatter(data, x="tip", y="total_bill", trendline="ols").data[1])
+        
+        st.plotly_chart(fig, use_container_width=True)
 
 def quiz_tab():
     st.header("Quiz: Scatter Plots")

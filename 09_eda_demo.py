@@ -48,6 +48,13 @@ st.markdown(f"""
         justify-content: center;
         align-items: center;
     }}
+    .split-container {{
+        display: flex;
+        justify-content: space-between;
+    }}
+    .split-column {{
+        width: 48%;
+    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -63,6 +70,7 @@ def main():
     """, unsafe_allow_html=True)
 
     tabs = st.tabs([
+        "EDA Overview",
         "What is EDA?", 
         "Why EDA?", 
         "EDA Techniques",
@@ -70,15 +78,18 @@ def main():
     ])
 
     with tabs[0]:
-        what_is_eda_tab()
+        eda_overview_tab()
 
     with tabs[1]:
-        why_eda_tab()
+        what_is_eda_tab()
 
     with tabs[2]:
-        eda_techniques_tab()
+        why_eda_tab()
 
     with tabs[3]:
+        eda_techniques_tab()
+
+    with tabs[4]:
         quiz_tab()
 
 def explain(text):
@@ -88,197 +99,155 @@ def explain(text):
     </div>
     """, unsafe_allow_html=True)
 
+def eda_overview_tab():
+    st.header("EDA Overview")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("What is EDA?")
+        st.markdown("""
+        - Combination of visualization techniques and statistical methods
+        - Exploring and summarizing key information within the data
+        - Initial examination of data to discover patterns, spot anomalies, test hypotheses, and check assumptions
+        """)
+    
+    with col2:
+        st.subheader("Why of EDA?")
+        st.markdown("""
+        - First step in any analysis
+        - Gain good insights into the data
+        - Uncover underlying structure of the data
+        - Detect and figure out the best strategy to handle unclean data (missing values, outliers etc.)
+        - Identify initial set of observations and insights
+        """)
+
 def what_is_eda_tab():
     st.header("What is EDA?")
     
-    st.markdown("""
-    - Combination of visualization techniques and statistical methods
-    - Exploring and summarizing key information within the data
-    - Initial examination of data to discover patterns, spot anomalies, test hypotheses, and check assumptions
-    """)
+    col1, col2 = st.columns([1, 1])
     
-    explain("EDA is a critical first step in analyzing datasets to summarize their main characteristics, often with visual methods.")
+    with col1:
+        st.code("""
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+data = pd.DataFrame({
+    'X': np.random.normal(0, 1, 1000),
+    'Y': np.random.normal(2, 1, 1000),
+})
+
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.scatter(data['X'], data['Y'])
+ax.set_title("Scatter Plot of X vs Y")
+ax.set_xlabel("X")
+ax.set_ylabel("Y")
+plt.show()
+        """, language="python")
     
-    # Interactive example
-    st.subheader("Interactive EDA Example")
-    
-    # Generate sample data
-    np.random.seed(0)
-    data = pd.DataFrame({
-        'X': np.random.normal(0, 1, 1000),
-        'Y': np.random.normal(2, 1, 1000),
-    })
-    
-    plot_type = st.selectbox("Choose a plot type", ["Scatter Plot", "Histogram", "Box Plot"])
-    
-    fig, ax = plt.subplots(figsize=(10, 6))
-    
-    if plot_type == "Scatter Plot":
+    with col2:
+        # Generate sample data
+        np.random.seed(0)
+        data = pd.DataFrame({
+            'X': np.random.normal(0, 1, 1000),
+            'Y': np.random.normal(2, 1, 1000),
+        })
+        
+        fig, ax = plt.subplots(figsize=(8, 5))
         ax.scatter(data['X'], data['Y'])
         ax.set_title("Scatter Plot of X vs Y")
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
-    elif plot_type == "Histogram":
-        ax.hist(data['X'], bins=30, alpha=0.5, label='X')
-        ax.hist(data['Y'], bins=30, alpha=0.5, label='Y')
-        ax.set_title("Histogram of X and Y")
-        ax.legend()
-    else:  # Box Plot
-        data.boxplot(ax=ax)
-        ax.set_title("Box Plot of X and Y")
+        st.pyplot(fig)
     
-    st.pyplot(fig)
-    
-    st.code(f"""
-    import matplotlib.pyplot as plt
-    import pandas as pd
-    import numpy as np
-
-    data = pd.DataFrame({{
-        'X': np.random.normal(0, 1, 1000),
-        'Y': np.random.normal(2, 1, 1000),
-    }})
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    
-    # Code for {plot_type.lower()}
-    {ax.get_children()[0] if plot_type == "Scatter Plot" else ax.containers[0] if plot_type == "Histogram" else ax.lines}
-    
-    plt.title("{ax.get_title()}")
-    plt.show()
-    """, language="python")
+    explain("EDA is a critical first step in analyzing datasets to summarize their main characteristics, often with visual methods.")
 
 def why_eda_tab():
     st.header("Why EDA?")
     
-    st.markdown("""
-    - First step in any analysis
-    - Gain good insights into the data
-    - Uncover underlying structure of the data
-    - Detect and figure out the best strategy to handle unclean data (missing values, outliers etc.)
-    - Identify initial set of observations and insights
-    """)
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.code("""
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Generate sample data
+np.random.seed(0)
+data = pd.DataFrame({
+    'A': np.random.normal(0, 1, 1000),
+    'B': np.random.normal(2, 1, 1000),
+    'C': np.random.normal(-1, 1.5, 1000),
+    'D': np.random.normal(5, 2, 1000)
+})
+
+# Create correlation heatmap
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.heatmap(data.corr(), annot=True, cmap='coolwarm', ax=ax)
+ax.set_title("Correlation Heatmap")
+plt.show()
+        """, language="python")
+    
+    with col2:
+        # Generate sample data
+        np.random.seed(0)
+        data = pd.DataFrame({
+            'A': np.random.normal(0, 1, 1000),
+            'B': np.random.normal(2, 1, 1000),
+            'C': np.random.normal(-1, 1.5, 1000),
+            'D': np.random.normal(5, 2, 1000)
+        })
+        
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.heatmap(data.corr(), annot=True, cmap='coolwarm', ax=ax)
+        ax.set_title("Correlation Heatmap")
+        st.pyplot(fig)
     
     explain("EDA helps analysts make sense of data before formal modeling and can lead to new questions and areas of investigation.")
-    
-    # Interactive example
-    st.subheader("Interactive Data Quality Check")
-    
-    # Generate sample data with some issues
-    np.random.seed(0)
-    data = pd.DataFrame({
-        'A': np.random.normal(0, 1, 1000),
-        'B': np.random.normal(2, 1, 1000),
-        'C': np.random.choice(['X', 'Y', 'Z', None], 1000),
-        'D': np.random.normal(5, 2, 1000)
-    })
-    data.loc[np.random.choice(data.index, 50), 'D'] = np.nan  # Add some missing values
-    data.loc[np.random.choice(data.index, 10), 'A'] = data['A'].max() * 2  # Add some outliers
-    
-    check_type = st.selectbox("Choose a data quality check", ["Missing Values", "Outliers", "Data Types"])
-    
-    if check_type == "Missing Values":
-        missing = data.isnull().sum()
-        st.bar_chart(missing)
-        st.write("Number of missing values in each column:")
-        st.write(missing)
-    elif check_type == "Outliers":
-        fig, ax = plt.subplots(figsize=(10, 6))
-        sns.boxplot(data=data[['A', 'B', 'D']], ax=ax)
-        ax.set_title("Box Plot to Detect Outliers")
-        st.pyplot(fig)
-    else:  # Data Types
-        st.write("Data types of each column:")
-        st.write(data.dtypes)
-    
-    st.code(f"""
-    import pandas as pd
-    import numpy as np
-    import seaborn as sns
-    import matplotlib.pyplot as plt
-
-    # Generate and check data
-    data = pd.DataFrame({{
-        'A': np.random.normal(0, 1, 1000),
-        'B': np.random.normal(2, 1, 1000),
-        'C': np.random.choice(['X', 'Y', 'Z', None], 1000),
-        'D': np.random.normal(5, 2, 1000)
-    }})
-    data.loc[np.random.choice(data.index, 50), 'D'] = np.nan
-    data.loc[np.random.choice(data.index, 10), 'A'] = data['A'].max() * 2
-
-    # Code for {check_type.lower()} check
-    {"missing = data.isnull().sum()" if check_type == "Missing Values" else "sns.boxplot(data=data[['A', 'B', 'D']])" if check_type == "Outliers" else "print(data.dtypes)"}
-    """, language="python")
 
 def eda_techniques_tab():
     st.header("EDA Techniques")
     
-    st.markdown("""
-    Common EDA techniques include:
-    - Univariate visualization (histograms, box plots)
-    - Bivariate visualization (scatter plots, pair plots)
-    - Multivariate visualization (heat maps, parallel coordinates)
-    - Descriptive statistics
-    - Correlation analysis
-    """)
+    col1, col2 = st.columns([1, 1])
     
-    explain("Different EDA techniques help reveal different aspects of the data, from distribution of individual variables to relationships between multiple variables.")
+    with col1:
+        st.code("""
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Generate sample data
+np.random.seed(0)
+data = pd.DataFrame({
+    'A': np.random.normal(0, 1, 1000),
+    'B': np.random.normal(2, 1, 1000),
+})
+
+# Create histogram
+fig, ax = plt.subplots(figsize=(8, 5))
+sns.histplot(data=data, x='A', kde=True, ax=ax)
+ax.set_title("Histogram of Variable A")
+plt.show()
+        """, language="python")
     
-    # Interactive example
-    st.subheader("Interactive EDA Technique Example")
-    
-    # Generate sample data
-    np.random.seed(0)
-    data = pd.DataFrame({
-        'A': np.random.normal(0, 1, 1000),
-        'B': np.random.normal(2, 1, 1000),
-        'C': np.random.normal(-1, 1.5, 1000),
-        'D': np.random.normal(5, 2, 1000)
-    })
-    
-    technique = st.selectbox("Choose an EDA technique", ["Univariate", "Bivariate", "Multivariate", "Descriptive Stats", "Correlation"])
-    
-    if technique == "Univariate":
-        fig, ax = plt.subplots(figsize=(10, 6))
+    with col2:
+        # Generate sample data
+        np.random.seed(0)
+        data = pd.DataFrame({
+            'A': np.random.normal(0, 1, 1000),
+            'B': np.random.normal(2, 1, 1000),
+        })
+        
+        fig, ax = plt.subplots(figsize=(8, 5))
         sns.histplot(data=data, x='A', kde=True, ax=ax)
         ax.set_title("Histogram of Variable A")
         st.pyplot(fig)
-    elif technique == "Bivariate":
-        fig, ax = plt.subplots(figsize=(10, 6))
-        sns.scatterplot(data=data, x='A', y='B', ax=ax)
-        ax.set_title("Scatter Plot of A vs B")
-        st.pyplot(fig)
-    elif technique == "Multivariate":
-        fig, ax = plt.subplots(figsize=(10, 6))
-        sns.heatmap(data.corr(), annot=True, cmap='coolwarm', ax=ax)
-        ax.set_title("Correlation Heatmap")
-        st.pyplot(fig)
-    elif technique == "Descriptive Stats":
-        st.write(data.describe())
-    else:  # Correlation
-        st.write(data.corr())
     
-    st.code(f"""
-    import pandas as pd
-    import numpy as np
-    import seaborn as sns
-    import matplotlib.pyplot as plt
-
-    data = pd.DataFrame({{
-        'A': np.random.normal(0, 1, 1000),
-        'B': np.random.normal(2, 1, 1000),
-        'C': np.random.normal(-1, 1.5, 1000),
-        'D': np.random.normal(5, 2, 1000)
-    }})
-
-    # Code for {technique.lower()} technique
-    {"sns.histplot(data=data, x='A', kde=True)" if technique == "Univariate" else 
-     "sns.scatterplot(data=data, x='A', y='B')" if technique == "Bivariate" else 
-     "sns.heatmap(data.corr(), annot=True, cmap='coolwarm')" if technique == "Multivariate" else 
-     "print(data.describe())" if technique == "Descriptive Stats" else 
-     "print(data.corr())"}
-    """, language="python")
+    explain("Different EDA techniques help reveal different aspects of the data, from distribution of individual variables to relationships between multiple variables.")
 
 def quiz_tab():
     st.header("EDA Quiz 📊")

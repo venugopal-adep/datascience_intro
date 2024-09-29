@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
+from sklearn.linear_model import LinearRegression
 
 st.set_page_config(layout="wide", page_title="Line Plot Exploration")
 
@@ -18,13 +19,12 @@ colors = {
 # Custom CSS
 st.markdown(f"""
 <style>
-    .reportview-container .main .block-container{{
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-        max-width: 1200px;
-    }}
     .stApp {{
         background-color: {colors['background']};
+    }}
+    .block-container {{
+        padding: 1rem;
+        max-width: 100%;
     }}
     h1, h2, h3, h4, h5, h6 {{
         color: {colors['primary']};
@@ -43,24 +43,19 @@ st.markdown(f"""
         background-color: {colors['secondary']};
         color: white;
     }}
-    .plot-container {{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }}
 </style>
 """, unsafe_allow_html=True)
 
 def explain(text):
     st.markdown(f"""
     <div style='background-color: white; padding: 15px; border-radius: 5px; border-left: 5px solid {colors['accent']}; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);'>
-        <p style='color: {colors['text']}; margin: 0;'>{text}</p>
+        <p style='color: {colors['text']};'>{text}</p>
     </div>
     """, unsafe_allow_html=True)
 
 def main():
     st.title("Line Plot Exploration")
-    st.write('**Developed by : Venugopal Adep**')
+    st.write('**Developed by: Venugopal Adep**')
     
     tabs = st.tabs(["Learn", "Interactive Demo", "Sales Predictor", "Quiz"])
     
@@ -108,7 +103,15 @@ def interactive_demo_tab():
     fig.update_traces(line_color=colors['secondary'])
     st.plotly_chart(fig)
     
-    explain("This plot shows the relationship between the sales and the number of days. We can observe that sales peaked on day 7.")
+    explain("""
+    Line shapes:
+    - **linear**: Straight lines connecting data points.
+    - **spline**: Smooth curved lines connecting data points.
+    - **hv**: Horizontal-Vertical step lines, moving horizontally first and then vertically.
+    - **vh**: Vertical-Horizontal step lines, moving vertically first and then horizontally.
+    - **hvh**: Horizontal-Vertical-Horizontal, creating a staircase effect.
+    - **vhv**: Vertical-Horizontal-Vertical, creating a staircase effect in the reverse order.
+    """)
     
     st.subheader("Customize the Plot")
     line_shape = st.selectbox("Line Shape", ["linear", "spline", "hv", "vh", "hvh", "vhv"])
@@ -166,7 +169,6 @@ def sales_predictor_tab():
     data = generate_sample_data()
     X = data['Day'].values.reshape(-1, 1)
     y = data['Sales'].values
-    from sklearn.linear_model import LinearRegression
     model = LinearRegression().fit(X, y)
     
     predicted_sales = model.predict([[day]])[0]

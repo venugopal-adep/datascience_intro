@@ -57,22 +57,18 @@ def main():
     """, unsafe_allow_html=True)
 
     tabs = st.tabs([
-        "What is Data Visualization?", 
-        "Why is it Important?", 
+        "Introduction",
         "Interactive Example",
         "Quiz"
     ])
 
     with tabs[0]:
-        what_is_data_viz_tab()
+        introduction_tab()
 
     with tabs[1]:
-        why_data_viz_important_tab()
-
-    with tabs[2]:
         interactive_example_tab()
 
-    with tabs[3]:
+    with tabs[2]:
         quiz_tab()
 
 def explain(text):
@@ -82,57 +78,24 @@ def explain(text):
     </div>
     """, unsafe_allow_html=True)
 
-def what_is_data_viz_tab():
-    st.header("What is Data Visualization?")
-    
-    st.markdown("""
-    Data visualization is:
-    - Visual representation of data
-    - Helps to observe and communicate patterns & trends with naked eye
-    """)
-    
-    explain("Data visualization transforms raw data into graphical representations, making it easier for humans to understand complex information at a glance.")
-    
-    # Example visualization
-    data = pd.DataFrame({
-        'category': ['A', 'B', 'C', 'D', 'E'],
-        'value': [23, 48, 12, 35, 19]
-    })
-    
-    fig = px.bar(data, x='category', y='value', title='Simple Bar Chart Example')
-    st.plotly_chart(fig)
-    
-    st.write("This bar chart is a simple example of data visualization. It represents the values for different categories visually, making it easy to compare them.")
+def introduction_tab():
+    st.header("Introduction to Visualization")
 
-def why_data_viz_important_tab():
-    st.header("Why is Data Visualization Important?")
-    
-    st.markdown("""
-    - Data visualization helps to communicate information in a manner that is universal, fast, and effective
-    - Communicating insights to non-technical decision makers is one of the most critical phases in a data science project
-    """)
-    
-    explain("Effective data visualization bridges the gap between complex data analysis and decision-making, making insights accessible to all stakeholders.")
-    
-    # Example of before and after visualization
-    st.subheader("Before and After Visualization")
-    
     col1, col2 = st.columns(2)
-    
+
     with col1:
-        st.write("Raw Data:")
-        data = pd.DataFrame({
-            'Date': pd.date_range(start='2023-01-01', periods=10),
-            'Value': [10, 15, 13, 18, 20, 21, 19, 25, 28, 30]
-        })
-        st.dataframe(data)
-    
+        st.subheader("What is Data Visualization?")
+        st.markdown("""
+        - Visual representation of data
+        - Helps to observe and communicate patterns & trends with naked eye
+        """)
+
     with col2:
-        st.write("Visualized Data:")
-        fig = px.line(data, x='Date', y='Value', title='Trend Over Time')
-        st.plotly_chart(fig)
-    
-    st.write("Notice how the trend is much easier to spot in the line chart compared to the raw data.")
+        st.subheader("Why Data Visualization is important?")
+        st.markdown("""
+        - Data visualization helps to communicate information in a manner that is universal, fast, and effective
+        - Communicating insights to non-technical decision makers is one of the most critical phases in a data science project
+        """)
 
 def interactive_example_tab():
     st.header("Interactive Visualization Example")
@@ -156,6 +119,7 @@ def interactive_example_tab():
         st.plotly_chart(fig, use_container_width=True)
     
     explain("This interactive example demonstrates how data visualization can help you explore and understand patterns in your data. Try adjusting the sliders to see how the visualization changes!")
+
 def quiz_tab():
     st.header("Data Visualization Quiz 📊")
     

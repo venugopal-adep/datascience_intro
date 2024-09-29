@@ -116,7 +116,7 @@ sns.histplot(data, kde=True, ax=ax1)
 ax1.set_title("Histogram with KDE")
 
 # Distribution plot
-sns.kdeplot(data, shade=True, ax=ax2)
+sns.kdeplot(data, fill=True, ax=ax2)
 ax2.set_title("Distribution Plot")
 
 plt.tight_layout()
@@ -134,7 +134,7 @@ plt.show()
         ax1.set_title("Histogram with KDE")
         
         # Distribution plot
-        sns.kdeplot(data, shade=True, ax=ax2)
+        sns.kdeplot(data, fill=True, ax=ax2)
         ax2.set_title("Distribution Plot")
         
         plt.tight_layout()

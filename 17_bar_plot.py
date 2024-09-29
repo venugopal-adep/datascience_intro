@@ -1,37 +1,26 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import plotly.express as px
 
 st.set_page_config(layout="wide", page_title="Bar Plot Exploration")
 
-# Custom color palette
-colors = {
-    "primary": "#0066CC",
-    "secondary": "#FF9900", 
-    "accent": "#66CC99",
-    "background": "#F0F8FF",
-    "text": "#333333"
-}
-
-# Custom CSS
+# Custom CSS for background and text styling
 st.markdown(f"""
 <style>
-    .reportview-container .main .block-container{{
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-        max-width: 1200px;
-    }}
     .stApp {{
-        background-color: {colors['background']};
+        background-color: #F0F8FF;
     }}
-    h1, h2, h3, h4, h5, h6 {{
-        color: {colors['primary']};
+    .block-container {{
+        padding: 1rem;
+        max-width: 100%;
+    }}
+    h1, h2, h3, h4 {{
+        color: #0066CC;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }}
     .stButton>button {{
-        background-color: {colors['accent']};
-        color: {colors['text']};
+        background-color: #66CC99;
+        color: #333333;
         font-weight: bold;
         border-radius: 5px;
         border: none;
@@ -39,7 +28,7 @@ st.markdown(f"""
         transition: all 0.3s ease;
     }}
     .stButton>button:hover {{
-        background-color: {colors['secondary']};
+        background-color: #FF9900;
         color: white;
     }}
 </style>
@@ -47,25 +36,15 @@ st.markdown(f"""
 
 def explain(text):
     st.markdown(f"""
-    <div style='background-color: white; padding: 15px; border-radius: 5px; border-left: 5px solid {colors['accent']}; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);'>
-        <p style='color: {colors['text']}; margin: 0;'>{text}</p>
+    <div style='background-color: white; padding: 15px; border-radius: 5px; border-left: 5px solid #66CC99; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);'>
+        <p style='color: #333333;'>{text}</p>
     </div>
     """, unsafe_allow_html=True)
 
-def main():
-    st.title("Bar Plot Exploration")
-    st.write('**Developed by : Venugopal Adep**')
-    
-    tabs = st.tabs(["Learn", "Interactive Demo", "Quiz"])
-    
-    with tabs[0]:
-        learn_tab()
-    
-    with tabs[1]:
-        interactive_demo_tab()
-    
-    with tabs[2]:
-        quiz_tab()
+def generate_sample_data():
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    students = [3, 4, 2, 3, 8, 10, 6, 1, 7, 8, 4, 7]
+    return pd.DataFrame({'Month': months, 'Number of Students': students})
 
 def learn_tab():
     st.header("Bar Plot")
@@ -78,15 +57,10 @@ def learn_tab():
     
     explain("Bar plots are effective for displaying and comparing discrete, categorical data. They make it easy to see patterns, trends, and differences between categories at a glance.")
 
-def generate_sample_data():
-    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    students = [3, 4, 2, 3, 8, 10, 6, 1, 7, 8, 4, 7]
-    return pd.DataFrame({'Month': months, 'Number of Students': students})
-
 def interactive_demo_tab():
     st.header("Interactive Bar Plot Demo")
     
-    # Create two columns: left for controls and explanation, right for plots
+    # Creating a full-width two-column layout
     left_col, right_col = st.columns([1, 2])
     
     data = generate_sample_data()
@@ -99,44 +73,25 @@ def interactive_demo_tab():
         orientation = st.radio("Bar Orientation", ["Vertical", "Horizontal"])
         color_bars = st.checkbox("Color Bars by Value")
         
-        explain("This plot shows the distribution of student birthdays across different months. We can easily compare the number of students born in each month.")
+        explain("This plot shows the distribution of student birthdays across different months.")
         
         st.code("""
         import plotly.express as px
         
-        # Create a bar plot
-        fig = px.bar(data, x="Month", y="Number of Students", 
-                     title="Birthday of Students by Month",
-                     labels={"Month": "Month", "Number of Students": "Number of Students"})
-        
-        # Optionally, change orientation to horizontal
-        # fig = px.bar(data, y="Month", x="Number of Students",
-        #              title="Birthday of Students by Month",
-        #              labels={"Month": "Month", "Number of Students": "Number of Students"},
-        #              orientation='h')
-        
-        # Optionally, color bars by value
-        # fig = px.bar(data, x="Month", y="Number of Students",
-        #              title="Birthday of Students by Month",
-        #              labels={"Month": "Month", "Number of Students": "Number of Students"},
-        #              color="Number of Students")
-        
+        fig = px.bar(data, x="Month", y="Number of Students", title="Bar Plot Example")
         fig.show()
         """)
     
     with right_col:
         st.subheader("Bar Plot: Birthday of Students by Month")
         if orientation == "Vertical":
-            fig = px.bar(data, x="Month", y="Number of Students",
+            fig = px.bar(data, x="Month", y="Number of Students", 
                          title="Birthday of Students by Month",
-                         labels={"Month": "Month", "Number of Students": "Number of Students"},
                          color="Number of Students" if color_bars else None)
         else:
-            fig = px.bar(data, y="Month", x="Number of Students",
-                         title="Birthday of Students by Month",
-                         labels={"Month": "Month", "Number of Students": "Number of Students"},
-                         color="Number of Students" if color_bars else None,
-                         orientation='h')
+            fig = px.bar(data, y="Month", x="Number of Students", 
+                         title="Birthday of Students by Month", 
+                         color="Number of Students" if color_bars else None, orientation='h')
         
         st.plotly_chart(fig, use_container_width=True)
 
@@ -201,6 +156,21 @@ def quiz_tab():
             st.success("Good job! You have a solid grasp of bar plot concepts.")
         else:
             st.info("Keep learning! Review the content about bar plots to improve your understanding.")
+
+def main():
+    st.title("Bar Plot Exploration")
+    st.write('**Developed by: Venugopal Adep**')
+    
+    tabs = st.tabs(["Learn", "Interactive Demo", "Quiz"])
+    
+    with tabs[0]:
+        learn_tab()
+    
+    with tabs[1]:
+        interactive_demo_tab()
+    
+    with tabs[2]:
+        quiz_tab()
 
 if __name__ == "__main__":
     main()

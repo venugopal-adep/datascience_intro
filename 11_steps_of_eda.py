@@ -56,7 +56,7 @@ def main():
     st.write('**Developed by : Venugopal Adep**')
     
     tabs = st.tabs([
-        "Learn",
+        "Steps of EDA",
         "Overview of Data",
         "Summary Statistics",
         "Univariate Analysis",
@@ -67,7 +67,7 @@ def main():
     ])
 
     with tabs[0]:
-        learn_tab()
+        steps_of_eda_tab()
 
     with tabs[1]:
         overview_of_data_tab()
@@ -97,50 +97,32 @@ def explain(text):
     </div>
     """, unsafe_allow_html=True)
 
-def learn_tab():
-    st.header("Learn about Data Preprocessing and EDA")
+def steps_of_eda_tab():
+    st.header("Steps of EDA")
     
-    st.subheader("What is Data Preprocessing?")
-    st.markdown("""
-    Data preprocessing refers to the process of preparing raw data into a structured format before building a machine learning model or performing analysis. It involves:
+    col1, col2 = st.columns([1, 1])
     
-    - Cleaning and handling missing data
-    - Transforming data into a suitable format
-    - Reducing noise and correcting inconsistencies
-    - Normalizing or scaling features
-    - Encoding categorical variables
-    """)
-    explain("Data preprocessing is a crucial step that transforms raw data into a format that's more suitable for analysis and modeling.")
-
-    st.subheader("Why Preprocess Data?")
-    st.markdown("""
-    Preprocessing data is crucial because:
-    - Raw data is often incomplete, inconsistent, and has many fallacies
-    - It makes the data suitable for statistical analysis and machine learning
-    - It helps avoid wrong insights and counter-productive decisions
-    - It's a necessary step before moving from data to insights
-    """)
-    explain("Preprocessing ensures that your data is in the best possible shape for analysis, reducing errors and improving the quality of insights.")
-
-    st.subheader("Data Preprocessing Techniques")
-    st.markdown("""
-    Common preprocessing techniques include:
-    - Handling missing data (deletion or imputation)
-    - Outlier detection and treatment
-    - Feature scaling (normalization, standardization)
-    - Encoding categorical variables
-    - Feature selection and dimensionality reduction
-    """)
-    explain("Different preprocessing techniques are used depending on the nature of the data and the requirements of the subsequent analysis or modeling.")
-
-    st.subheader("EDA and Preprocessing")
-    st.markdown("""
-    Exploratory Data Analysis (EDA) and preprocessing are closely related:
-    - EDA helps identify preprocessing needs (e.g., missing values, outliers)
-    - Preprocessing improves the quality of EDA insights
-    - Both are iterative processes that inform each other
-    """)
-    explain("EDA and preprocessing work hand in hand to prepare data for analysis and modeling, often in an iterative cycle.")
+    with col1:
+        st.subheader("Overview of Data")
+        st.write("Gain basic understanding of the data - shape, data types, etc.")
+        
+        st.subheader("Summary Statistics")
+        st.write("Check descriptive statistics about the data - mean, std, median, etc.")
+        
+        st.subheader("Univariate Analysis")
+        st.write("Check distribution of variables in the data, missing values, outliers")
+        
+        st.subheader("Bivariate Analysis")
+        st.write("Find the patterns or relationships between different variables")
+        
+        st.subheader("Multivariate Analysis")
+        st.write("Explore more combination of variables to unearth deeper insights")
+        
+        st.subheader("Key fixes and summarize")
+        st.write("Identify and do the key fixes in the data. Finally, summarize the key findings from EDA")
+    
+    with col2:
+        st.image("https://raw.githubusercontent.com/your_username/your_repo/main/steps_of_eda.png", use_column_width=True)
 
 # Generate sample data
 np.random.seed(0)
@@ -153,128 +135,157 @@ data = pd.DataFrame({
 
 def overview_of_data_tab():
     st.header("Overview of Data")
-    st.write("Gain basic understanding of the data - shape, data types, etc.")
-    st.write(data.head())
-    st.write(f"Data shape: {data.shape}")
-    st.write(data.dtypes)
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.write("Gain basic understanding of the data - shape, data types, etc.")
+        st.write(f"Data shape: {data.shape}")
+        st.write(data.dtypes)
 
-    st.code("""
-    # View the first few rows of the data
-    print(data.head())
+        st.code("""
+        # View the first few rows of the data
+        print(data.head())
 
-    # Check the shape of the data
-    print(f"Data shape: {data.shape}")
+        # Check the shape of the data
+        print(f"Data shape: {data.shape}")
 
-    # Display data types of each column
-    print(data.dtypes)
-    """)
+        # Display data types of each column
+        print(data.dtypes)
+        """)
+    
+    with col2:
+        st.write(data.head())
 
 def summary_statistics_tab():
     st.header("Summary Statistics")
-    st.write("Check descriptive statistics about the data - mean, std, median, etc.")
-    st.write(data.describe())
-
-    st.code("""
-    # Display summary statistics
-    print(data.describe())
-    """)
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.write("Check descriptive statistics about the data - mean, std, median, etc.")
+        st.code("""
+        # Display summary statistics
+        print(data.describe())
+        """)
+    
+    with col2:
+        st.write(data.describe())
 
 def univariate_analysis_tab():
     st.header("Univariate Analysis")
-    st.write("Check distribution of variables in the data, missing values, outliers")
-    col = st.selectbox("Select a column for univariate analysis", data.columns)
+    col1, col2 = st.columns([1, 1])
     
-    if data[col].dtype == 'object':
-        fig = px.bar(data[col].value_counts().reset_index(), x='index', y='count', labels={'index': col, 'count': 'Count'})
-    else:
-        fig = px.histogram(data, x=col)
-    
-    st.plotly_chart(fig)
+    with col1:
+        st.write("Check distribution of variables in the data, missing values, outliers")
+        col = st.selectbox("Select a column for univariate analysis", data.columns)
+        
+        st.code(f"""
+        import plotly.express as px
 
-    st.code(f"""
-    import plotly.express as px
-
-    # For categorical variables
-    if data['{col}'].dtype == 'object':
-        fig = px.bar(data['{col}'].value_counts().reset_index(), x='index', y='count', labels={{'index': '{col}', 'count': 'Count'}})
-    # For numerical variables
-    else:
-        fig = px.histogram(data, x='{col}')
+        # For categorical variables
+        if data['{col}'].dtype == 'object':
+            fig = px.bar(data['{col}'].value_counts().reset_index(), x='index', y='count', labels={{'index': '{col}', 'count': 'Count'}})
+        # For numerical variables
+        else:
+            fig = px.histogram(data, x='{col}')
+        
+        fig.show()
+        """)
     
-    fig.show()
-    """)
+    with col2:
+        if data[col].dtype == 'object':
+            fig = px.bar(data[col].value_counts().reset_index(), x='index', y='count', labels={'index': col, 'count': 'Count'})
+        else:
+            fig = px.histogram(data, x=col)
+        
+        st.plotly_chart(fig, use_container_width=True)
 
 def bivariate_analysis_tab():
     st.header("Bivariate Analysis")
-    st.write("Find the patterns or relationships between different variables")
-    col1 = st.selectbox("Select first variable", data.columns)
-    col2 = st.selectbox("Select second variable", data.columns)
+    col1, col2 = st.columns([1, 1])
     
-    if data[col1].dtype == 'object' or data[col2].dtype == 'object':
-        fig = px.box(data, x=col1, y=col2)
-    else:
-        fig = px.scatter(data, x=col1, y=col2)
-    
-    st.plotly_chart(fig)
+    with col1:
+        st.write("Find the patterns or relationships between different variables")
+        col1 = st.selectbox("Select first variable", data.columns)
+        col2 = st.selectbox("Select second variable", data.columns)
+        
+        st.code(f"""
+        import plotly.express as px
 
-    st.code(f"""
-    import plotly.express as px
-
-    # If either variable is categorical
-    if data['{col1}'].dtype == 'object' or data['{col2}'].dtype == 'object':
-        fig = px.box(data, x='{col1}', y='{col2}')
-    # If both variables are numerical
-    else:
-        fig = px.scatter(data, x='{col1}', y='{col2}')
+        # If either variable is categorical
+        if data['{col1}'].dtype == 'object' or data['{col2}'].dtype == 'object':
+            fig = px.box(data, x='{col1}', y='{col2}')
+        # If both variables are numerical
+        else:
+            fig = px.scatter(data, x='{col1}', y='{col2}')
+        
+        fig.show()
+        """)
     
-    fig.show()
-    """)
+    with col2:
+        if data[col1].dtype == 'object' or data[col2].dtype == 'object':
+            fig = px.box(data, x=col1, y=col2)
+        else:
+            fig = px.scatter(data, x=col1, y=col2)
+        
+        st.plotly_chart(fig, use_container_width=True)
 
 def multivariate_analysis_tab():
     st.header("Multivariate Analysis")
-    st.write("Explore more combination of variables to unearth deeper insights")
-    fig = px.scatter_matrix(data)
-    st.plotly_chart(fig)
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.write("Explore more combination of variables to unearth deeper insights")
+        st.code("""
+        import plotly.express as px
 
-    st.code("""
-    import plotly.express as px
-
-    # Create a scatter matrix plot
-    fig = px.scatter_matrix(data)
-    fig.show()
-    """)
+        # Create a scatter matrix plot
+        fig = px.scatter_matrix(data)
+        fig.show()
+        """)
+    
+    with col2:
+        fig = px.scatter_matrix(data)
+        st.plotly_chart(fig, use_container_width=True)
 
 def key_fixes_and_summarize_tab():
     st.header("Key fixes and summarize")
-    st.write("Identify and do the key fixes in the data. Finally, summarize the key findings from EDA")
-    st.write("Based on our EDA, we might want to:")
-    st.write("1. Handle any outliers in the Income column")
-    st.write("2. Encode the Education column for machine learning models")
-    st.write("3. Investigate the relationship between Age, Income, and Satisfaction")
-    st.write("4. Consider feature engineering, such as creating age groups")
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.write("Identify and do the key fixes in the data. Finally, summarize the key findings from EDA")
+        st.write("Based on our EDA, we might want to:")
+        st.write("1. Handle any outliers in the Income column")
+        st.write("2. Encode the Education column for machine learning models")
+        st.write("3. Investigate the relationship between Age, Income, and Satisfaction")
+        st.write("4. Consider feature engineering, such as creating age groups")
 
-    st.code("""
-    # Example of handling outliers
-    Q1 = data['Income'].quantile(0.25)
-    Q3 = data['Income'].quantile(0.75)
-    IQR = Q3 - Q1
-    lower_bound = Q1 - 1.5 * IQR
-    upper_bound = Q3 + 1.5 * IQR
-    data_cleaned = data[(data['Income'] >= lower_bound) & (data['Income'] <= upper_bound)]
+        st.code("""
+        # Example of handling outliers
+        Q1 = data['Income'].quantile(0.25)
+        Q3 = data['Income'].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        data_cleaned = data[(data['Income'] >= lower_bound) & (data['Income'] <= upper_bound)]
 
-    # Example of encoding categorical variables
-    data_encoded = pd.get_dummies(data, columns=['Education'])
+        # Example of encoding categorical variables
+        data_encoded = pd.get_dummies(data, columns=['Education'])
 
-    # Example of feature engineering
-    data['Age_Group'] = pd.cut(data['Age'], bins=[0, 25, 35, 45, 55, 100], labels=['18-25', '26-35', '36-45', '46-55', '55+'])
+        # Example of feature engineering
+        data['Age_Group'] = pd.cut(data['Age'], bins=[0, 25, 35, 45, 55, 100], labels=['18-25', '26-35', '36-45', '46-55', '55+'])
 
-    # Summarize findings
-    print("Key findings from EDA:")
-    print("1. Income distribution and potential outliers")
-    print("2. Relationship between Education and Income")
-    print("3. Correlation between Age, Income, and Satisfaction")
-    print("4. Distribution of Age Groups")
-    """)
+        # Summarize findings
+        print("Key findings from EDA:")
+        print("1. Income distribution and potential outliers")
+        print("2. Relationship between Education and Income")
+        print("3. Correlation between Age, Income, and Satisfaction")
+        print("4. Distribution of Age Groups")
+        """)
+    
+    with col2:
+        # Example plot for key fixes
+        fig = px.box(data, x='Education', y='Income', title='Income Distribution by Education Level')
+        st.plotly_chart(fig, use_container_width=True)
 
 def quiz_tab():
     st.header("Data Preprocessing and EDA Quiz")

@@ -52,7 +52,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 def main():
-    st.title("Data Preprocessing and EDA Demo")
+    st.title("Steps of EDA")
     st.write('**Developed by : Venugopal Adep**')
     
     tabs = st.tabs([

@@ -201,31 +201,31 @@ def univariate_analysis_tab():
 
 def bivariate_analysis_tab():
     st.header("Bivariate Analysis")
-    col1, col2 = st.columns([1, 1])
+    left_col, right_col = st.columns([1, 1])
     
-    with col1:
+    with left_col:
         st.write("Find the patterns or relationships between different variables")
-        col1 = st.selectbox("Select first variable", data.columns)
-        col2 = st.selectbox("Select second variable", data.columns)
+        var1 = st.selectbox("Select first variable", data.columns, key="var1")
+        var2 = st.selectbox("Select second variable", data.columns, key="var2")
         
         st.code(f"""
         import plotly.express as px
 
         # If either variable is categorical
-        if data['{col1}'].dtype == 'object' or data['{col2}'].dtype == 'object':
-            fig = px.box(data, x='{col1}', y='{col2}')
+        if data['{var1}'].dtype == 'object' or data['{var2}'].dtype == 'object':
+            fig = px.box(data, x='{var1}', y='{var2}')
         # If both variables are numerical
         else:
-            fig = px.scatter(data, x='{col1}', y='{col2}')
+            fig = px.scatter(data, x='{var1}', y='{var2}')
         
         fig.show()
         """)
     
-    with col2:
-        if data[col1].dtype == 'object' or data[col2].dtype == 'object':
-            fig = px.box(data, x=col1, y=col2)
+    with right_col:
+        if data[var1].dtype == 'object' or data[var2].dtype == 'object':
+            fig = px.box(data, x=var1, y=var2)
         else:
-            fig = px.scatter(data, x=col1, y=col2)
+            fig = px.scatter(data, x=var1, y=var2)
         
         st.plotly_chart(fig, use_container_width=True)
 
